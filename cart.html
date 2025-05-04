@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cart Page</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #eef2f3;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: #fff;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Cart Section Styles */
+        .cart {
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 40px auto;
+            background: linear-gradient(145deg, #ffffff, #e0e0e0);
+            border-radius: 15px;
+            box-shadow: 10px 10px 20px #c8c8c8, -10px -10px 20px #ffffff;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .cart:hover {
+            transform: scale(1.02);
+            box-shadow: 12px 12px 24px #c8c8c8, -12px -12px 24px #ffffff;
+        }
+
+        .cart .heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .cart .heading h2 {
+            font-size: 36px;
+            color: #333;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Cart Item Styles */
+        .cart .cart-item {
+            background: linear-gradient(145deg, #f0f0f0, #d8d8d8);
+            border-radius: 10px;
+            box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff;
+            margin-bottom: 25px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .cart .cart-item:hover {
+            background-color: #f9f9f9;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart .cart-item img {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-right: 25px;
+            border: 2px solid #4facfe;
+        }
+
+        .cart .cart-item .item-details {
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        .cart .cart-item .name {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+        .cart .cart-item .quantity {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .cart .cart-item .price {
+            font-size: 18px;
+            color: #4facfe;
+            font-weight: bold;
+        }
+
+        /* Quantity Controls */
+        .cart .cart-item .quantity-control {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .cart .cart-item .quantity-button {
+            background-color: #4facfe;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 14px;
+            font-weight: bold;
+            outline: none;
+            margin: 0 8px;
+        }
+
+        .cart .cart-item .quantity-button:hover {
+            background-color: #007bff;
+        }
+
+        .cart .cart-item .remove-button {
+            background-color: #ff6b6b;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 14px;
+            font-weight: bold;
+            outline: none;
+        }
+
+        .cart .cart-item .remove-button:hover {
+            background-color: #e63946;
+        }
+
+        /* Total Amount */
+        .cart .total {
+            text-align: right;
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 25px;
+            color: #333;
+        }
+
+        /* Order Now Section */
+        .orderNow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 2px solid #4facfe;
+        }
+
+        .orderNow .btn-container {
+            text-align: center;
+        }
+
+        .orderNow button {
+            background-color: #4facfe;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 18px;
+            text-transform: uppercase;
+            outline: none;
+            font-weight: bold;
+            box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .orderNow button:hover {
+            background-color: #007bff;
+        }
+
+        .orderNow a {
+            text-decoration: none;
+        }
+
+        .orderNow a button {
+            background: linear-gradient(to right, #467fb2, #5fd369);
+
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 18px;
+            text-transform: uppercase;
+            outline: none;
+            font-weight: bold;
+            box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .orderNow a button:hover {
+            background-color: #495057;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .cart {
+                padding: 25px;
+            }
+
+            .cart .heading h2 {
+                font-size: 28px;
+            }
+
+            .cart .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 18px;
+            }
+
+            .cart .cart-item img {
+                margin-bottom: 15px;
+            }
+
+            .cart .cart-item .item-details {
+                margin-bottom: 15px;
+            }
+
+            .cart .total {
+                font-size: 22px;
+            }
+
+            .orderNow {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .orderNow .btn-container {
+                margin-top: 25px;
+            }
+        }
+    </style>
+    
+    <script>
+       function loadCart() {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let cartContainer = document.getElementById('cart-container');
+    cartContainer.innerHTML = ''; // Clear the container before adding items
+    let total = 0;
+
+    cart.forEach((item, index) => {
+        let itemElement = document.createElement('div');
+        itemElement.className = 'cart-item';
+        itemElement.innerHTML = `
+            <img src="${item.image}" alt="${item.name}">
+            <div class="item-details">
+                <span class="name">${item.name}</span>
+                <div class="quantity-control">
+                    <button class="quantity-button" onclick="updateQuantity(${index}, -1)">-</button>
+                    <span class="quantity">${item.quantity}</span>
+                    <button class="quantity-button" onclick="updateQuantity(${index}, 1)">+</button>
+                </div>
+                <span class="price">Price: &#8377;${(item.price * item.quantity).toFixed(2)}</span>
+            </div>
+            <button class="remove-button" onclick="removeFromCart(${index})">Remove</button>
+        `;
+        cartContainer.appendChild(itemElement);
+        total += item.price * item.quantity;
+    });
+
+    document.getElementById('total').innerHTML = `Total: &#8377;${total.toFixed(2)}`;
+}
+
+function updateQuantity(index, change) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart[index].quantity += change;
+    if (cart[index].quantity <= 0) {
+        cart.splice(index, 1); // Remove the item if the quantity reaches 0
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    loadCart(); // Reload the cart to reflect the changes
+}
+
+function removeFromCart(index) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.splice(index, 1); // Remove the item at the given index
+    localStorage.setItem('cart', JSON.stringify(cart));
+    loadCart(); // Reload the cart to reflect the changes
+}
+
+function proceedToPayment() {
+    // Here you would redirect to the payment page or handle payment processing
+    alert("Proceeding to payment...");
+}
+
+window.onload = loadCart;
+    </script>
+</head>
+<body>
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger
+  chat-icon="https:&#x2F;&#x2F;i.pinimg.com&#x2F;originals&#x2F;2a&#x2F;2b&#x2F;62&#x2F;2a2b62b0291a97df8f8b6cff1b7f8319.jpg"
+  intent="WELCOME"
+  chat-title="Medi-Merge-Chatbot"
+  agent-id="3e92b371-f736-48ff-ae1c-feda5423d2cc"
+  language-code="en"
+></df-messenger>
+    
+    <section class="cart" id="cart">
+        <img style="height: 110px;width: 110px;" src="MEDI_MERGE_LOGO.png" alt="Logo" class="logo">
+        <div class="heading">
+            <h2 style="color: green;">Your Cart</h2>
+        </div>
+        <div id="cart-container">
+            <!-- Cart items will be dynamically added here -->
+        </div>
+        <div class="total" id="total">
+            <!-- Total amount will be dynamically added here -->
+        </div>
+        <div class="orderNow">
+           <a href="checkout.html"> <button onclick="proceedToPayment()">Proceed to Payment</button></a>
+            <div class="btn-container">
+                <a href="product.html"><button>Continue Shopping</button></a>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
+

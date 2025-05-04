@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout Page</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #7a7a7a, #bcbcbc);
+      color: #333;
+      /* border: red; */
+    }
+
+    .checkout-container {
+      max-width: 850px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      
+    }
+
+    .checkout-heading {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .checkout-heading img {
+      height: 80px;
+      width: 80px;
+      margin-bottom: 8px;
+    }
+
+    .checkout-heading h2 {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #444;
+      margin: 0;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #555;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group select,
+    .form-group textarea {
+      width: 95%;
+      padding: 10px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #fff;
+    }
+
+    .form-group button,
+    .form-group .back-to-cart {
+      display: inline-block;
+      padding: 10px 16px;
+      font-size: 15px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-transform: uppercase;
+      text-decoration: none;
+      margin-right: 10px;
+    }
+
+    .form-group button[type="reset"] {
+      background: linear-gradient(135deg, #ff6a6a, #e05e5e);
+    }
+
+    .form-group .back-to-cart {
+      background: linear-gradient(135deg, #ffc107, #e6a800);
+      color: #333;
+    }
+
+    .order-summary {
+      margin-top: 25px;
+      padding: 15px;
+      background-color: #e9ecef;
+      border-radius: 10px;
+      border: 1px solid #bbb;
+    }
+
+    .order-summary h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #444;
+    }
+
+    .order-summary .total {
+      font-size: 17px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    #gpayQR {
+      display: none;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    #gpayQR img {
+      width: 180px;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 768px) {
+      .checkout-container {
+        padding: 15px;
+      }
+
+      .checkout-heading h2 {
+        font-size: 1.6rem;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        font-size: 14px;
+      }
+
+      .form-group button {
+        padding: 8px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="checkout-container">
+    <div class="checkout-heading">
+      <img src="MEDI_MERGE_LOGO.png" alt="Logo" class="logo">
+      <h2 style="color: rgb(63, 113, 13);">Checkout</h2>
+    </div>
+    <form id="checkoutForm" method="POST" action="saveOrder.php" onsubmit="saveOrderDetails(event)">
+      <div class="form-group">
+        <label for="fullName">👤 Full Name</label>
+        <input type="text" id="fullName" name="fullName" required />
+      </div>
+      <div class="form-group">
+        <label for="email">📧 Email Address</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+      <div class="form-group">
+        <label for="address">🏠 Address</label>
+        <textarea id="address" name="address" rows="3" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="phone">📞 Phone Number</label>
+        <input type="text" id="phone" name="phone" required />
+      </div>
+      <div class="form-group">
+        <label for="paymentMethod">💳 Payment Method</label>
+        <select id="paymentMethod" name="paymentMethod" required onchange="toggleCardOrQR()">
+          <option value="">Select Payment Method</option>
+          <option value="creditCard">Credit Card</option>
+          <option value="debitCard">Debit Card</option>
+          <option value="gpay">GPay</option>
+          <option value="cashOnDelivery">Cash On Delivery</option>
+        </select>
+      </div>
+      <div class="form-group" id="cardNumberField" style="display: none;">
+        <label for="cardNumber">💳 Card Number</label>
+        <input type="text" id="cardNumber" name="cardNumber">
+      </div>
+
+      <div id="gpayQR">
+        <p><strong>📱 Scan & Pay using GPay</strong></p>
+        <img src="gpay-qr.png" alt="GPay QR Code" />
+      </div>
+
+      <div class="form-group">
+        <button type="submit">Complete Payment</button>
+        <button type="reset">Reset</button>
+        <a href="cart.html" class="back-to-cart">Back to Cart</a>
+      </div>
+    </form>
+
+    <div class="order-summary" id="orderSummary">
+      <h3>🛒 Order Summary</h3>
+      <div class="total" id="checkoutTotal"></div>
+    </div>
+  </div>
+
+  <script>
+    function saveOrderDetails(event) {
+      event.preventDefault();
+
+      let fullName = document.getElementById('fullName').value;
+      let email = document.getElementById('email').value;
+      let address = document.getElementById('address').value;
+      let phone = document.getElementById('phone').value;
+      let paymentMethod = document.getElementById('paymentMethod').value;
+      let cardNumber = '';
+
+      if (paymentMethod === 'creditCard' || paymentMethod === 'debitCard') {
+        cardNumber = document.getElementById('cardNumber').value;
+      }
+
+      let orderID = Math.floor(Math.random() * 1000000);
+      let orderDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+      let orderTotal = JSON.parse(localStorage.getItem('cartTotal')) || 0;
+
+      let form = document.getElementById('checkoutForm');
+
+      let hiddenInputs = `
+        <input type="hidden" name="orderID" value="${orderID}">
+        <input type="hidden" name="orderDate" value="${orderDate}">
+        <input type="hidden" name="orderTotal" value="${orderTotal}">
+        <input type="hidden" name="shippingAddress" value="${address}">
+      `;
+      form.innerHTML += hiddenInputs;
+      form.submit();
+    }
+
+    function toggleCardOrQR() {
+      let paymentMethod = document.getElementById('paymentMethod').value;
+      let cardField = document.getElementById('cardNumberField');
+      let qrField = document.getElementById('gpayQR');
+
+      if (paymentMethod === 'creditCard' || paymentMethod === 'debitCard') {
+        cardField.style.display = 'block';
+        qrField.style.display = 'none';
+      } else if (paymentMethod === 'gpay') {
+        cardField.style.display = 'none';
+        qrField.style.display = 'block';
+      } else {
+        cardField.style.display = 'none';
+        qrField.style.display = 'none';
+      }
+    }
+
+    function loadCart() {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let total = 0;
+
+      cart.forEach(item => {
+        total += item.price * item.quantity;
+      });
+
+      localStorage.setItem('cartTotal', total.toFixed(2));
+      document.getElementById('checkoutTotal').innerHTML = `Total: &#8377;${total.toFixed(2)}`;
+    }
+
+    window.onload = loadCart;
+  </script>
+</body>
+</html>

@@ -1,0 +1,940 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediMerge</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <link rel="stylesheet" href="medico.css">
+
+
+</head>
+
+
+<body>
+    <script src="js/navbar.js"></script>
+
+    <script>
+        // Fetch session data to control visibility of navbar elements
+        fetch('/session')
+            .then(response => response.json())
+            .then(data => {
+                const signInLink = document.getElementById('sign-in-link');
+                const logoutLink = document.getElementById('logout-link');
+                const usernameDisplay = document.getElementById('username-display');
+
+                if (data.username) {
+                    // User is logged in: Show 'Hello, Username' and 'Logout', hide 'Sign In'
+                    usernameDisplay.textContent = `Hello, ${data.username}`;
+                    usernameDisplay.style.display = 'inline';
+                    signInLink.style.display = 'none';
+                    logoutLink.style.display = 'inline';
+                } else {
+                    // User is not logged in: Show 'Sign In', hide 'Logout' and 'Username'
+                    usernameDisplay.style.display = 'none';
+                    signInLink.style.display = 'inline';
+                    logoutLink.style.display = 'none';
+                }
+            })
+            .catch(error => console.error('Error fetching session data:', error));
+    </script>
+
+
+   <!-- Header Section -->
+<header class="header" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;">
+    
+    <!-- Logo Content -->
+    <div class="logoContent" style="display: flex; align-items: center;">
+        <a href="medico.html" class="logo">
+            <img src="MEDI_MERGE_LOGO.png" alt="" style="width: 50px; height: auto;">
+        </a>
+        <h1 class="logoName" style="margin-left: 10px; font-weight: bold; font-size: 22px;">
+            <span style="color: rgb(17, 182, 113);">MediMerge</span>Market
+        </h1>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar" style="display: flex; gap: 20px; align-items: center;">
+        <a href="#Home" style="text-decoration: none; color: #333; font-weight: 700;">Home</a>
+        <a href="product.html" style="text-decoration: none; color: #333; font-weight: 700;">Products</a>
+        <a href="#About Us" style="text-decoration: none; color: #333; font-weight: 700;">About Us</a>
+        <a href="#Contact Us" style="text-decoration: none; color: #333; font-weight: 700;">Contact Us</a>
+        <a href="dashboard.php" style="text-decoration: none; color: #333; font-weight: 700;">Dashboard</a>
+        <a href="medico.html" id="sign-in-link" style="text-decoration: none; color: #007bff; font-weight: 600;">Log out</a>
+        <span id="username-display" style="display: none; margin-left: 10px; font-weight: bold;"></span>
+        <a href="cart.html" style="text-decoration: none; color: #333; font-weight: 700;"><i class="fas fa-shopping-cart"></i> Cart</a>
+    </nav>
+
+    <!-- Header Icons -->
+    <div class="icon" style="display: flex; align-items: center; gap: 15px;">
+        <i class="fas fa-search" id="search" style="cursor: pointer; color: #555;"></i>
+        <i class="fas fa-bars" id="menu-bar" style="cursor: pointer; color: #555;"></i>
+    </div>
+
+    <!-- Search Box -->
+    <div class="search" style="margin-left: 20px;">
+        <input type="search" placeholder="search..." style="padding: 8px 12px; border-radius: 20px; border: 1px solid #ccc; outline: none;">
+    </div>
+</header>
+
+<!-- Home Section -->
+<section class="Home" id="Home" style="padding: 60px 30px; background: url('mainn.webp') no-repeat center center/cover; color: #fff;">
+    <div class="HomeContent" style="max-width: 600px;">
+        <h2 style="font-size: 40px; font-weight: bold; margin-bottom: 20px; text-shadow: 2px 2px 8px rgba(0,0,0,0.4);">
+            Our Service Starts With A Beautiful Smile
+        </h2>
+        <p style="font-size: 20px; color: #50430d; line-height: 1.6; font-weight: 600; text-shadow: 1px 1px 6px rgba(0,0,0,0.5);">
+            Medi Merge Market is here to help you take it easy! We are an online medical store, making your purchase easy, simple, and affordable!
+        </p>
+        <div class="Home-btn" style="margin-top: 30px;">
+            <a href="#">
+                <button style="padding: 10px 24px; background: #11b671; color: white; border: none; border-radius: 25px; font-size: 16px; cursor: pointer; transition: background 0.3s;">
+                    See More
+                </button>
+            </a>
+        </div>
+    </div>
+</section>
+
+    <!-- home section end here  -->
+
+    <!-- product section start here  -->
+    <section class="Products" id="Products">
+        <div class="heading">
+            <h2>Our Exclusive Products</h2>
+        </div>
+        <div class="swiper Products-row">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide box">
+                    <div class="img">
+                        <img src="pills.png" alt="">
+                    </div>
+                    <div class="Products-content">
+                        <h3>Pills</h3>
+                        <p>pill Tablet is a hormonal contraception, an effective contraceptive tablet widely used by
+                            women to avoid unwanted pregnancy.A pill was originally defined as a small, round, solid
+                            pharmaceutical oral dosage form of medication
+                        </p>
+                        <div class="orderNow">
+                            <a href="product.html"><button>Order Now </button></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide box">
+                    <div class="img">
+                        <img src="i-pill.png" alt="">
+                    </div>
+                    <div class="Products-content">
+                        <h3>I Pills</h3>
+                        <p>i-Pill Emergency Contraceptive Pill, 1 Tablet is a female hormone called progestin (a form of
+                            progesterone) used to prevent unintended pregnancy and hormone therapywomen to avoid
+                            unwanted pregnancy.
+
+                        </p>
+                        <div class="orderNow">
+                            <a href="product.html"><button>Order Now </button></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide box">
+                    <div class="img">
+                        <img src="cold.png" alt="">
+                    </div>
+                    <div class="Products-content">
+                        <h3>Cold</h3>
+                        <p>Anti Cold Tablet is a combination of medicines that effectively relieves symptoms of common
+                            cold such as blocked nose, runny nose, watery eyes, sneezing, and congestion or stuffiness.
+                            This makes it easier.
+                        </p>
+                        <div class="orderNow">
+                            <a href="product.html"><button>Order Now </button></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide box">
+                    <div class="img">
+                        <img src="Diabites.png" alt="">
+                    </div>
+                    <div class="Products-content">
+                        <h3>Diabetes</h3>
+                        <p>Diabetes is a chronic (long-lasting) health condition that affects how your body turns food
+                            into energy. Your body breaks down most of the food you eat into sugar (glucose) and
+                            releases it into your bloodstream
+                        </p>
+                        <div class="orderNow">
+                            <a href="product.html"><button>Order Now </button></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+        <div class="swiper Products-row">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide box">
+                    <div class="img">
+                        <img src="Strength-Pain.jpg" alt="">
+                    </div>
+                    <div class="Products-content">
+                        <h3>Mertin</h3>
+                        <p>Mertin 16 Tablet is used to prevent and treat a disorder of the inner ear known as Ménière’s
+                            disease. The symptoms include dizziness (vertigo), ringing in the ears (tinnitus), and loss
+                            of hearing, probably caused by fluid
+                        </p>
+                        <div class="orderNow">
+                            <a href="product.html"><button>Order Now </button></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide box">
+                    <div class="img">
+                        <img src="fever.png" alt="">
+                    </div>
+                    <div class="Products-content">
+                        <h3>Paracetamol</h3>
+                        <p>Paracetamol Tablet may be prescribed alone or in combination with another medicine. You
+                            should take it regularly as advised by your doctor. It is usually best taken with food
+                            otherwise it may upset your stomach.
+                        <div class="orderNow">
+                            <a href="product.html"><button>Order Now </button></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide box">
+                    <div class="img">
+                        <img src="headache.png" alt="">
+                    </div>
+                    <div class="Products-content">
+                        <h3>headache</h3>
+                        <p>Stopache Tablet is a combination of two medicines used in the treatment of headache. It helps
+                            relieve headache by blocking the release of certain chemical messengers that causes
+                            headache.Your doctor will advise.
+                        </p>
+                        <div class="orderNow">
+                            <a href="product.html"><button>Order Now </button></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide box">
+                    <div class="img">
+                        <img src="Diabites.png" alt="">
+                    </div>
+                    <div class="Products-content">
+                        <h3>Diabites</h3>
+                        <p>Diabetes is a chronic (long-lasting) health condition that affects how your body turns food
+                            into energy. Your body breaks down most of the food you eat into sugar (glucose) and
+                            releases it into your bloodstream
+                        </p>
+                        <div class="orderNow">
+                            <a href="product.html"><button>Order Now </button></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </section>
+
+    <!-- product section end here  -->
+    <section class="about-us-section" id="About Us">
+        <div class="about-wrapper">
+          <div class="about-left">
+            <div class="about-title-center">
+              <h2 class="animate">About <span style="color:#11b671;">MediMerge Market</span></h2>
+            </div>
+            <p class="animate">
+              <strong style="color:#11b671;">MediMerge</strong> is on a mission to bridge the gap between healthcare and accessibility through seamless, patient-centric solutions. We recognize the importance of timely care and are committed to connecting people with medical expertise whenever they need it.
+            </p>
+            <p class="animate">
+              Backed by a dedicated team of healthcare professionals, MediMerge delivers virtual consultations, expert medical guidance, and access to vital health resources—all designed to support your well-being every step of the way.
+            </p>
+            <h3 class="animate">Our Vision</h3>
+            <p class="animate">
+              To make high-quality healthcare accessible to everyone, empowering individuals to take control of their health confidently.
+            </p>
+            <h3 class="animate">Our Core Values</h3>
+            <ul class="animate">
+              <li><strong>Compassionate Care:</strong> Personalized, empathetic support for every patient.</li>
+              <li><strong>Innovation:</strong> Leveraging technology to simplify healthcare.</li>
+              <li><strong>Integrity:</strong> Transparency and trust at the heart of our services.</li>
+              <li><strong>Community-Centered:</strong> Creating healthier communities through integrated solutions.</li>
+            </ul>
+          </div>
+          <div class="about-right animate">
+            <img src="./About Img.png" alt="Pharmacy GIF">
+          </div>
+        </div>
+      </section>
+      
+      <style>
+      .about-us-section {
+        background: linear-gradient(135deg, #dffbf2, #e0f8f3);
+        padding: 80px 20px;
+        font-family: 'Segoe UI', sans-serif;
+      }
+      
+      .about-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1200px;
+        margin: auto;
+        gap: 2rem;
+      }
+      
+      .about-left {
+        flex: 1 1 55%;
+        font-size: 18px;
+        font-weight: 500; /* Slightly bold */
+        line-height: 1.8;
+        color: #2c2c2c;
+        padding-left: 30px; /* Spacing from left edge */
+        padding-right: 10px;
+      }
+      
+      .about-title-center {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      
+      .about-left h2 {
+        font-size: 36px;
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+      
+      .about-left h3 {
+        color: #11b671;
+        margin-top: 25px;
+        font-size: 24px;
+        font-weight: 600;
+      }
+      
+      .about-left ul {
+        padding-left: 20px;
+        list-style: disc;
+      }
+      
+      .about-right {
+        flex: 1 1 40%;
+        text-align: center;
+      }
+      
+      .about-right img {
+        width: 100%;
+        max-width: 400px;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      
+      /* Animation */
+      .animate {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 1s ease-out forwards;
+      }
+      
+      .animate:nth-child(2) { animation-delay: 0.2s; }
+      .animate:nth-child(3) { animation-delay: 0.4s; }
+      .animate:nth-child(4) { animation-delay: 0.6s; }
+      .animate:nth-child(5) { animation-delay: 0.8s; }
+      
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .about-wrapper {
+          flex-direction: column;
+          text-align: center;
+        }
+      
+        .about-left,
+        .about-right {
+          flex: 1 1 100%;
+        }
+      
+        .about-left {
+          font-size: 16px;
+          padding-left: 15px;
+          padding-right: 15px;
+        }
+      
+        .about-left h2 {
+          font-size: 28px;
+        }
+      }
+      </style>
+      
+      
+        <!-- blogs section start here  -->
+        <section class="Services" id="Services">
+            <div class="swiper Services-row">
+              <div class="swiper-wrapper">
+                <!-- Product 1 -->
+                <div class="swiper-slide box">
+                  <div class="img">
+                    <img src="vicks.png" alt="Vicks">
+                    <span class="tag">Special Offer</span>
+                  </div>
+                  <div class="content">
+                    <h3>Vicks Action 500 Advanced Tablet</h3>
+                    <p>
+                      Vicks Action 500 Advanced Tablet is taken with or without food in a dose and duration as advised by the doctor.
+                      It is better to take it with food to avoid stomach upset.
+                    </p>
+                    <p>
+                      This medicine treats common cold symptoms and provides temporary relief from nasal stuffiness.
+                    </p>
+                    <a href="#Services" class="btn">Learn More</a>
+                  </div>
+                </div>
+          
+                <!-- Product 2 -->
+                <div class="swiper-slide box">
+                  <div class="img">
+                    <img src="pampers.png" alt="Pampers">
+                    <span class="tag">Special Offer</span>
+                  </div>
+                  <div class="content">
+                    <h3>Premium Care Diaper Pants</h3>
+                    <p>
+                      Pampers diapers are daily essentials for babies, available in all sizes from newborns to toddlers.
+                    </p>
+                    <p>
+                      They include a wetness indicator, have a shelf life of 36 months, and last up to 12 hours.
+                    </p>
+                    <a href="#Services" class="btn">Learn More</a>
+                  </div>
+                </div>
+          
+                <!-- Product 3 -->
+                <div class="swiper-slide box">
+                  <div class="img">
+                    <img src="protien.png" alt="Protein">
+                    <span class="tag">Special Offer</span>
+                  </div>
+                  <div class="content">
+                    <h3>Casein Protein Powder</h3>
+                    <p>
+                      Casein protein is safe for healthy adults and commonly used by bodybuilders for recovery and muscle gain.
+                    </p>
+                    <p>
+                      It's also found in dairy-based baby formulas and should be used under medical advice if you have conditions.
+                    </p>
+                    <a href="#Services" class="btn">Learn More</a>
+                  </div>
+                </div>
+              </div>
+          
+              <!-- Swiper Buttons -->
+              <div class="swiper-button-next"></div>
+              <div class="swiper-button-prev"></div>
+              <div class="swiper-pagination"></div>
+            </div>
+          </section>
+          
+          <!-- CSS -->
+          <style>
+          .Services {
+            padding: 60px 20px;
+            background: #f9f9f9;
+            font-family: 'Segoe UI', sans-serif;
+          }
+          
+          .Services-row {
+            max-width: 1200px;
+            margin: auto;
+            position: relative;
+          }
+          
+          .box {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+          }
+          
+          .box:hover {
+            transform: translateY(-5px);
+          }
+          
+          .img {
+            position: relative;
+            text-align: center;
+            padding: 20px;
+            background: #f0fff7;
+          }
+          
+          .img img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+          }
+          
+          .tag {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: red;
+            color: white;
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+          }
+          
+          .content {
+            padding: 20px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            line-height: 1.6;
+          }
+          
+          .content h3 {
+            font-size: 20px;
+            color: #11b671;
+            margin-bottom: 12px;
+            font-weight: 600;
+          }
+          
+          .content p {
+            margin-bottom: 10px;
+          }
+          
+          .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #11b671;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+            font-weight: bold;
+          }
+          
+          .btn:hover {
+            background-color: #0e9e60;
+          }
+          
+          /* Swiper navigation customization (optional) */
+          .swiper-button-next,
+          .swiper-button-prev {
+            color: #11b671;
+          }
+          
+          .swiper-pagination-bullet-active {
+            background: #11b671;
+          }
+          
+          /* Responsive */
+          @media (max-width: 768px) {
+            .content {
+              text-align: center;
+            }
+          
+            .tag {
+              top: 10px;
+              left: 10px;
+              font-size: 12px;
+              padding: 4px 10px;
+            }
+          }
+          </style>
+          
+
+        <!-- blogs section ends here  -->
+
+        <!-- newsletter section start here  -->
+
+        <section class="newsletter">
+            <form action="">
+                <h3>subscribe for latest update</h3>
+                <input type="email" name="" placeholder="enter your email" id="" class="box">
+                <input type="button" value="subscribe" class="box2">
+            </form>
+        </section>
+        <!-- newsletter section ends here  -->
+
+        <!-- review section start here  -->
+        <section class="review" id="review">
+            <style>
+              .review {
+                padding: 50px 20px;
+                background-color: #fffbea;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              }
+          
+              .review .heading h2 {
+                text-align: center;
+                font-size: 2.5rem;
+                color: #b28500;
+                margin-bottom: 40px;
+                text-transform: uppercase;
+                font-weight: bold;
+              }
+          
+              .review .review-row {
+                display: flex;
+                justify-content: center;
+                align-items: stretch;
+                gap: 20px;
+                flex-wrap: wrap;
+              }
+          
+              .review .swiper-slide.box {
+                background: #fff6d8;
+                border: 2px solid #ffd700;
+                border-radius: 20px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                padding: 25px;
+                width: 300px;
+                flex-shrink: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+              }
+          
+              .review .swiper-slide.box:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+              }
+          
+              .review .client-review p {
+                font-size: 1rem;
+                color: #444;
+                margin-bottom: 20px;
+              }
+          
+              .review .client-info {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+              }
+          
+              .review .client-info .img img {
+                width: 60px;
+                height: 60px;
+                object-fit: cover;
+                border-radius: 50%;
+                border: 3px solid #ffd700;
+              }
+          
+              .review .clientDetailed h3 {
+                font-size: 1.1rem;
+                margin: 0;
+                color: #b28500;
+              }
+          
+              .review .clientDetailed p {
+                margin: 0;
+                font-size: 0.9rem;
+                color: #777;
+              }
+          
+              @media (max-width: 768px) {
+                .review .review-row {
+                  flex-direction: column;
+                  align-items: center;
+                }
+              }
+            </style>
+          
+            <div class="heading">
+              <h2>Client Reviews</h2>
+            </div>
+          
+            <div class="swiper review-row">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide box">
+                  <div class="client-review">
+                    <p>Medi Merge 24|7 is the best online consultation, diagnostic, and pharmacy app that gives you access to a host of medical.</p>
+                  </div>
+                  <div class="client-info">
+                    <div class="img">
+                      <img src="mens.png" alt="">
+                    </div>
+                    <div class="clientDetailed">
+                      <h3>DR Sunilshetty</h3>
+                      <p>Doctor</p>
+                    </div>
+                  </div>
+                </div>
+          
+                <div class="swiper-slide box">
+                  <div class="client-review">
+                    <p>Medi Merge 24|7 is the best online consultation, diagnostic, and pharmacy app that gives you access to a host of medical.</p>
+                  </div>
+                  <div class="client-info">
+                    <div class="img">
+                      <img src="mens.png" alt="">
+                    </div>
+                    <div class="clientDetailed">
+                      <h3>Arjun Reddy</h3>
+                      <p>Kim Doctor</p>
+                    </div>
+                  </div>
+                </div>
+          
+                <div class="swiper-slide box">
+                  <div class="client-review">
+                    <p>Medicines are always in stock. The personal/household hygiene products always in stock. Delivery is early to my address.</p>
+                  </div>
+                  <div class="client-info">
+                    <div class="img">
+                      <img src="mens.png" alt="">
+                    </div>
+                    <div class="clientDetailed">
+                      <h3>Preethi Shetty</h3>
+                      <p>Developer</p>
+                    </div>
+                  </div>
+                </div>
+          
+                <div class="swiper-slide box">
+                  <div class="client-review">
+                    <p>Unlike others that push delivery date to 2 weeks and then cancel half of the items many times any time you need.</p>
+                  </div>
+                  <div class="client-info">
+                    <div class="img">
+                      <img src="mens.png" alt="">
+                    </div>
+                    <div class="clientDetailed">
+                      <h3>Raghu Reddy</h3>
+                      <p>DM Doctor</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-pagination"></div>
+            </div>
+          </section>
+          
+        
+        <!-- review section ends here  -->
+
+        <!-- footer section start here  -->
+
+        <footer class="footer-modern" id="Contact Us">
+            <style>
+              .footer-modern {
+                background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+                color: #fff;
+                padding: 60px 30px 40px;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              }
+          
+              .footer-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 30px;
+                max-width: 1300px;
+                margin: auto;
+              }
+          
+              .footer-section {
+                flex: 1 1 200px;
+                min-width: 250px;
+              }
+          
+              .footer-section h3 {
+                font-size: 20px;
+                color: #ffd700;
+                margin-bottom: 15px;
+              }
+          
+              .footer-section p,
+              .footer-section a {
+                font-size: 16px;
+                color: #ccc;
+                text-decoration: none;
+                margin-bottom: 10px;
+                display: block;
+                line-height: 1.6;
+                transition: color 0.3s ease;
+              }
+          
+              .footer-section a:hover {
+                color: #fff;
+              }
+          
+              .logo {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+              }
+          
+              .logo img {
+                width: 60px;
+                height: 60px;
+              }
+          
+              .logo h1 {
+                font-size: 26px;
+                color: #ffd700;
+                margin: 0;
+              }
+          
+              .description-text {
+                margin-top: 10px;
+                max-width: 300px;
+                text-align: justify;
+                word-wrap: break-word;
+              }
+          
+              .footer-image {
+                flex: 1 1 250px;
+                text-align: right;
+              }
+          
+              .footer-image img {
+                max-width: 100%;
+                height: auto;
+                max-height: 180px;
+                border-radius: 10px;
+              }
+          
+              .social-icons {
+                text-align: center;
+                margin-top: 30px;
+              }
+          
+              .social-icons a {
+                display: inline-block;
+                margin: 0 8px;
+                background: #ffd700;
+                color: #2c5364;
+                padding: 12px;
+                border-radius: 50%;
+                font-size: 18px;
+                transition: all 0.3s ease;
+              }
+          
+              .social-icons a:hover {
+                background: #fff;
+                color: #000;
+                transform: scale(1.1);
+              }
+          
+              .credit {
+                text-align: center;
+                color: #aaa;
+                margin-top: 30px;
+                font-size: 15px;
+                border-top: 1px solid #444;
+                padding-top: 20px;
+              }
+          
+              .credit span {
+                color: #ffd700;
+              }
+          
+              @media (max-width: 768px) {
+                .footer-container {
+                  flex-direction: column;
+                  align-items: center;
+                  text-align: center;
+                }
+          
+                .footer-image {
+                  text-align: center;
+                }
+          
+                .description-text {
+                  max-width: 100%;
+                }
+              }
+            </style>
+          
+            <div class="footer-container">
+              <div class="footer-section">
+                <div class="logo">
+                  <img src="logo.png" alt="Logo">
+                  <h1>Medi Merge</h1>
+                </div>
+                <p class="description-text">
+                  Medi Merge is here to help you take it easy! <br>
+                  We are an online medical store <br>
+                  providing reliable health solutions <br>
+                  with trust and care for everyone.
+                </p>
+              </div>
+          
+              <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="#">Home</a>
+                <a href="#">Product</a>
+                <a href="#">Blogs</a>
+                <a href="#">Review</a>
+                <a href="#">Contact</a>
+              </div>
+          
+              <div class="footer-section">
+                <h3>Extra Links</h3>
+                <a href="#">Account Info</a>
+                <a href="#">Order Item</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Payment Method</a>
+                <a href="#">Our Services</a>
+              </div>
+          
+              <div class="footer-section">
+                <h3>Contact Info</h3>
+                <a href="#"><i class="fas fa-phone"></i> +91 9234567892</a>
+                <a href="#"><i class="fas fa-envelope"></i> ramagugan77@gmail.com</a>
+              </div>
+          
+              <div class="footer-image">
+                <img src="footer-right-img.png" alt="Footer Image">
+              </div>
+            </div>
+          
+            <div class="social-icons">
+              <a href="#" class="fab fa-facebook-f"></a>
+              <a href="#" class="fab fa-twitter"></a>
+              <a href="#" class="fab fa-instagram"></a>
+              <a href="#" class="fab fa-linkedin"></a>
+              <a href="#" class="fab fa-pinterest"></a>
+            </div>
+          
+            <div class="credit">
+              Created by <span>Ranjith & Team</span>
+            </div>
+          </footer>
+
+        <!-- swiper js link  -->
+        <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+        <!-- custom js file  -->
+        <script src="medico.js"></script>
+
+
+</body>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger
+  chat-icon="https:&#x2F;&#x2F;i.pinimg.com&#x2F;originals&#x2F;2a&#x2F;2b&#x2F;62&#x2F;2a2b62b0291a97df8f8b6cff1b7f8319.jpg"
+  intent="WELCOME"
+  chat-title="Medi-Merge-Chatbot"
+  agent-id="3e92b371-f736-48ff-ae1c-feda5423d2cc"
+  language-code="en"
+></df-messenger>
+</html>

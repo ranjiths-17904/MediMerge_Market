@@ -33,14 +33,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['user_id'] = $id;
             $_SESSION['username'] = $username;
 
-            // Check specific user credentials for conditional redirection
-            if ($username == "Ranjith17" && $email == "ranjithpal17@gmail.com") {
-                header('Location: medico3.html'); // Redirect to medico3.html for specific user
-                exit;
-            } else {
-                header('Location: medico1.html'); // Redirect to medico1.html for all other users
+            // Admin redirect by credentials
+            if ($username === 'TheAdmin') {
+                header('Location: dashboard.php');
                 exit;
             }
+
+            // Post-login redirect support
+            $redirect = isset($_SESSION['post_login_redirect']) ? $_SESSION['post_login_redirect'] : null;
+            if ($redirect) { unset($_SESSION['post_login_redirect']); header("Location: $redirect&login=success"); exit; }
+            header('Location: medico.html?login=success');
+            exit;
         } else {
             // Invalid password
             $_SESSION['error'] = "Invalid email or password.";

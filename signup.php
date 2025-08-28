@@ -25,11 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Insert email, username, and password
         $stmt = $conn->prepare("INSERT INTO users (email, username, password) VALUES (?, ?, ?)");
+        if(!$stmt){
+            echo "Database error: " . $conn->error;
+            exit();
+        }
         $stmt->bind_param("sss", $email, $username, $hashed_password);
 
         if ($stmt->execute()) {
-            echo "New record created successfully";
-            header('Location: login.php');
+            header('Location: login.php?signup=success');
             exit();
         } else {
             echo "Error: " . $stmt->error;

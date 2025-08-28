@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - MediMerge</title>
+    <script src="navbar.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background:#f5f7fa; margin:0; }
+        .container{ max-width:1100px; margin:80px auto 40px; padding:0 16px; }
+        .grid{ display:grid; grid-template-columns: 1fr 2fr; gap:24px; }
+        .card{ background:#fff; border-radius:16px; box-shadow:0 8px 24px rgba(0,0,0,.08); padding:24px; }
+        h2{ margin:0 0 16px; font-size:22px; }
+        .row{ display:flex; gap:12px; margin-bottom:12px; }
+        label{ width:140px; color:#666; font-weight:600; }
+        input{ flex:1; padding:10px 12px; border:1px solid #e1e1e1; border-radius:10px; }
+        .btn{ background:linear-gradient(135deg,#11b671,#0ea55d); color:#fff; border:none; padding:12px 18px; border-radius:10px; font-weight:700; cursor:pointer; }
+        table{ width:100%; border-collapse:collapse; }
+        th,td{ padding:12px; border-bottom:1px solid #eee; text-align:left; }
+        th{ background:#fafafa; }
+        .empty{ color:#777; padding:20px; text-align:center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="grid">
+            <div class="card">
+                <h2>Profile</h2>
+                <div class="row"><label>Username</label><input id="uName" type="text"></div>
+                <div class="row"><label>Email</label><input id="uEmail" type="email"></div>
+                <div class="row"><label>New Password</label><input id="uPwd" type="password" placeholder="Leave blank to keep unchanged"></div>
+                <button class="btn" onclick="saveProfile()">Save Profile</button>
+            </div>
+            <div class="card">
+                <h2>Recent Orders</h2>
+                <div id="ordersWrap"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // require login
+        fetch('session.php').then(r=>r.json()).then(s=>{
+            if(!s.username){ window.location.href='login.php'; return; }
+            document.getElementById('uName').value = s.username;
+        });
+
+        function renderOrders(){
+            const wrap=document.getElementById('ordersWrap');
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            if(orders.length===0){ wrap.innerHTML = '<div class="empty">No orders yet</div>'; return; }
+            let html='<table><thead><tr><th>Order ID</th><th>Date</th><th>Items</th><th>Total</th></tr></thead><tbody>';
+            orders.slice().reverse().forEach(o=>{
+                const items=o.items.map(i=>i.name+` x${i.quantity}`).join(', ');
+                html+=`<tr><td>${o.orderId}</td><td>${new Date(o.orderDate).toLocaleString()}</td><td>${items}</td><td>₹${(o.items.reduce((s,i)=>s+i.price*i.quantity,0)*1.18).toFixed(2)}</td></tr>`;
+            });
+            html+='</tbody></table>';
+            wrap.innerHTML=html;
+        }
+        renderOrders();
+
+        function saveProfile(){
+            const name=document.getElementById('uName').value.trim();
+            const email=document.getElementById('uEmail').value.trim();
+            if(!name){ if(window.navbar&&window.navbar.showToast) navbar.showToast('Username cannot be empty'); return; }
+            if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ if(window.navbar&&window.navbar.showToast) navbar.showToast('Enter a valid email'); return; }
+            if(window.navbar&&window.navbar.showToast) navbar.showToast('Profile updated');
+        }
+    </script>
+</body>
+</html>
+

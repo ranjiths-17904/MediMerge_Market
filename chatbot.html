@@ -1,52 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <Link rel="stylesheet" href="./Style/chat.css">
+    <title>MediMerge - Chat</title>
+    <link rel="stylesheet" href="./Style/chat.css">
+    <style>
+        body{font-family:'Inter',sans-serif;background:#f5f7fa;margin:0}
+        .container{max-width:900px;margin:40px auto;padding:0 16px}
+        .card{background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.08);overflow:hidden}
+        .header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid #eee}
+        .header h1{font-size:20px;margin:0;color:#333}
+        .chat{display:flex;flex-direction:column;height:60vh}
+        .messages{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+        .msg{max-width:80%;padding:12px 14px;border-radius:14px;font-size:14px;line-height:1.4}
+        .bot{background:#f3f6ff;border:1px solid #e3e9ff;color:#2b2f3a;align-self:flex-start}
+        .user{background:linear-gradient(135deg,#11b671,#0ea55d);color:#fff;align-self:flex-end}
+        .input{display:flex;gap:8px;padding:12px;border-top:1px solid #eee}
+        .input input{flex:1;border:1px solid #e1e1e1;border-radius:10px;padding:12px}
+        .btn{background:linear-gradient(135deg,#11b671,#0ea55d);color:#fff;border:none;border-radius:10px;padding:0 16px;font-weight:700;cursor:pointer}
+        @media(max-width:768px){.chat{height:70vh}}
+    </style>
 </head>
-
 <body>
     <div class="container">
-        <div class="main">
-            <div class="upper">
-                <img style="height: 5rem; width: 5rem;" src="./Images/MEDI_MERGE_LOGO.png" alt="MediMerge" />
-                <h1 class="head">FAQ-Chat</h1>
+        <div class="card">
+            <div class="header">
+                <img src="./Images/MEDI_MERGE_LOGO.png" alt="MediMerge" style="height:36px;width:36px">
+                <h1>FAQ Chat</h1>
+            </div>
+            <div class="chat">
+                <div id="messages" class="messages"></div>
+                <div class="input">
+                    <input id="chatInput" type="text" placeholder="Ask about orders, shipping, returns...">
+                    <button id="sendBtn" class="btn">Send</button>
+                </div>
             </div>
         </div>
-        <div class="inp">
-            <form class="form" action="">
-                <input class="chatt" type="text" name="chat" id="chat">
-                <button>
-                    <div class="svg-wrapper-1">
-                        <div class="svg-wrapper">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                <path fill="none" d="M0 0h24v24H0z"></path>
-                                <path fill="currentColor"
-                                    d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z">
-                                </path>
-                            </svg>
-                        </div>
-                    </div>
-                    <span>Send</span>
-                </button>
-            </form>
-        </div>
-        <!-- <div class="card">
-                  <div class="chat-header">Chat</div>
-                    <div class="chat-window">
-                      <ul class="message-list"></ul>
-                    </div>
-                    <div class="chat-input">
-                        <input type="text" class="message-input" placeholder="Type your message here">
-                        <button class="send-button">Send</button>
-                    </div>
-                  </div> -->
-
     </div>
 
-</body>
+    <script>
+        const messagesEl=document.getElementById('messages');
+        const inputEl=document.getElementById('chatInput');
+        const sendBtn=document.getElementById('sendBtn');
 
+        const faqs=[
+            {q:/order status|track/i,a:'You can view order status in Dashboard > Recent Orders. Tracking is coming soon.'},
+            {q:/refund|return/i,a:'Returns are accepted within 7 days for unopened items. Contact support.'},
+            {q:/delivery|shipping/i,a:'Delivery takes 3-5 business days. Shipping is currently free.'},
+            {q:/payment|upi|card|cod/i,a:'We support Card, UPI, and COD at checkout.'},
+            {q:/contact|support/i,a:'Email support@medimerge.local or use the Contact section.'}
+        ];
+
+        function addMsg(text, cls){
+            const d=document.createElement('div');
+            d.className='msg '+cls; d.textContent=text; messagesEl.appendChild(d); messagesEl.scrollTop=messagesEl.scrollHeight;
+        }
+        function botReply(t){
+            const f=faqs.find(f=>f.q.test(t));
+            return f?f.a:"I'm not sure about that. Please check our Products and FAQ sections.";
+        }
+        function send(){
+            const t=inputEl.value.trim(); if(!t) return; addMsg(t,'user'); inputEl.value='';
+            setTimeout(()=>addMsg(botReply(t),'bot'),300);
+        }
+        sendBtn.addEventListener('click',send);
+        inputEl.addEventListener('keypress',e=>{ if(e.key==='Enter'){ e.preventDefault(); send(); }});
+
+        // Greet
+        addMsg('Hi! How can I help you today?','bot');
+    </script>
+</body>
 </html>

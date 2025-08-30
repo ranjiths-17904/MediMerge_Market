@@ -787,7 +787,24 @@ $conn->close();
         }
 
         function deleteProduct(id) {
-            if (confirm('Are you sure you want to delete this product?')) {
+            // custom confirmation modal
+            const overlay=document.createElement('div');
+            overlay.className='modal';
+            overlay.style.display='block';
+            overlay.innerHTML=`
+                <div class="modal-content">
+                  <div class="modal-header"><h2>Delete Product</h2><button class="close-btn" id="delClose">&times;</button></div>
+                  <p>Are you sure you want to delete this product?</p>
+                  <div class="form-actions">
+                    <button class="btn btn-secondary" id="delCancel">Cancel</button>
+                    <button class="btn btn-danger" id="delConfirm">Delete</button>
+                  </div>
+                </div>`;
+            document.body.appendChild(overlay);
+            overlay.querySelector('#delClose').onclick=()=>document.body.removeChild(overlay);
+            overlay.querySelector('#delCancel').onclick=(e)=>{e.preventDefault();document.body.removeChild(overlay);} ;
+            overlay.querySelector('#delConfirm').onclick=(e)=>{
+                e.preventDefault();
                 const form = document.createElement('form');
                 form.method = 'POST';
                 form.innerHTML = `
@@ -796,7 +813,7 @@ $conn->close();
                 `;
                 document.body.appendChild(form);
                 form.submit();
-            }
+            };
         }
 
         // Close modal when clicking outside

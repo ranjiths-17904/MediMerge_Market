@@ -39,9 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 exit;
             }
 
-            // Post-login redirect support
-            $redirect = isset($_SESSION['post_login_redirect']) ? $_SESSION['post_login_redirect'] : null;
-            if ($redirect) { unset($_SESSION['post_login_redirect']); header("Location: $redirect&login=success"); exit; }
+            // Client stores redirect in localStorage; fallback support via GET param
+            if (isset($_GET['redirect'])) {
+                $redir = $_GET['redirect'];
+                header("Location: $redir");
+                exit;
+            }
             header('Location: medico.html?login=success');
             exit;
         } else {

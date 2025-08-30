@@ -12,6 +12,21 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Create users table if it doesn't exist
+$users_sql = "CREATE TABLE IF NOT EXISTS users (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)";
+
+if ($conn->query($users_sql) === TRUE) {
+    echo "Users table created successfully or already exists<br>";
+} else {
+    echo "Error creating users table: " . $conn->error . "<br>";
+}
+
 // Create products table if it doesn't exist
 $sql = "CREATE TABLE IF NOT EXISTS products (
     id INT(11) AUTO_INCREMENT PRIMARY KEY,
@@ -55,7 +70,7 @@ if ($row['count'] == 0) {
             'stock' => 25
         ],
         [
-            'name' => 'Cold & Flu Relief',
+            'name' => 'Equate Cold & Flu Relief',
             'description' => 'Multi-symptom relief for cold, flu, and congestion. Helps with runny nose, fever, and body aches.',
             'price' => 9.00,
             'category' => 'Cold & Cough',
@@ -101,6 +116,22 @@ if ($row['count'] == 0) {
             'category' => 'Diabetes',
             'image' => './Images/insulin.jpg',
             'stock' => 15
+        ],
+        [
+            'name' => 'Creatine Monohydrate',
+            'description' => 'Muscle building supplement for athletes and fitness enthusiasts.',
+            'price' => 18.00,
+            'category' => 'Vitamins',
+            'image' => './Images/creatine.jpeg',
+            'stock' => 30
+        ],
+        [
+            'name' => 'Blood Pressure Monitor',
+            'description' => 'Digital blood pressure monitor for home use. Accurate readings for health monitoring.',
+            'price' => 45.00,
+            'category' => 'First Aid',
+            'image' => './Images/bp.png',
+            'stock' => 20
         ]
     ];
 
@@ -143,7 +174,7 @@ if ($conn->query($orders_sql) === TRUE) {
     echo "Error creating orders table: " . $conn->error . "<br>";
 }
 
-// Ensure admin user exists
+// Ensure admin user exists with correct credentials
 $adminCheck = $conn->prepare("SELECT id FROM users WHERE username=?");
 $adminUser = 'TheAdmin';
 $adminCheck->bind_param('s', $adminUser);
@@ -151,15 +182,20 @@ $adminCheck->execute();
 $adminCheck->store_result();
 if($adminCheck->num_rows === 0){
     $adminEmail = 'AdminMM@gmail.com';
-    $adminPass = password_hash('Admin@MM01', PASSWORD_DEFAULT);
+    $adminPass = password_hash('Admin@MM', PASSWORD_DEFAULT); // Fixed password
     $ins = $conn->prepare("INSERT INTO users (email, username, password) VALUES (?,?,?)");
     if($ins){
         $ins->bind_param('sss', $adminEmail, $adminUser, $adminPass);
         if($ins->execute()){
-            echo "Admin user created (username: TheAdmin)<br>";
+            echo "Admin user created successfully!<br>";
+            echo "Email: AdminMM@gmail.com<br>";
+            echo "Username: TheAdmin<br>";
+            echo "Password: Admin@MM<br>";
         }
         $ins->close();
     }
+} else {
+    echo "Admin user already exists.<br>";
 }
 $adminCheck->close();
 

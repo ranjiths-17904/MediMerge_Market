@@ -6,6 +6,7 @@
     <title>Checkout - MediMerge</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="navbar.js"></script>
+    <script src="include-chatbot.js"></script>
     <style>
         * {
             margin: 0;
@@ -20,7 +21,7 @@
         }
 
         .checkout-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -37,7 +38,7 @@
 
         .page-header h1 {
             color: #333;
-            font-size: 36px;
+            font-size: clamp(24px, 5vw, 36px);
             font-weight: 700;
             margin-bottom: 10px;
         }
@@ -48,7 +49,7 @@
 
         .page-header p {
             color: #666;
-            font-size: 16px;
+            font-size: clamp(14px, 3vw, 16px);
         }
 
         .checkout-content {
@@ -70,7 +71,7 @@
         }
 
         .section-title {
-            font-size: 20px;
+            font-size: clamp(18px, 4vw, 20px);
             font-weight: 700;
             color: #333;
             margin-bottom: 20px;
@@ -106,14 +107,20 @@
             font-size: 14px;
         }
 
+        .form-group label.required::after {
+            content: ' *';
+            color: #ff4757;
+        }
+
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 15px;
+            padding: 15px 20px;
             border: 2px solid #e1e1e1;
-            border-radius: 12px;
+            border-radius: 15px;
             font-size: 16px;
+            outline: none;
             transition: all 0.3s ease;
             background: white;
         }
@@ -121,7 +128,6 @@
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
-            outline: none;
             border-color: #11b671;
             box-shadow: 0 0 0 3px rgba(17, 182, 113, 0.1);
         }
@@ -135,37 +141,43 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            margin-top: 15px;
+            margin-bottom: 20px;
         }
 
         .payment-method {
+            background: white;
             border: 2px solid #e1e1e1;
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 15px;
+            padding: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            text-align: center;
         }
 
         .payment-method:hover {
             border-color: #11b671;
-            background: rgba(17, 182, 113, 0.05);
+            transform: translateY(-2px);
         }
 
         .payment-method.selected {
             border-color: #11b671;
-            background: rgba(17, 182, 113, 0.1);
+            background: rgba(17, 182, 113, 0.05);
         }
 
         .payment-method input[type="radio"] {
-            margin: 0;
+            display: none;
         }
 
         .payment-method i {
-            font-size: 20px;
+            font-size: 24px;
             color: #11b671;
+            margin-bottom: 10px;
+        }
+
+        .payment-method label {
+            cursor: pointer;
+            font-weight: 600;
+            color: #333;
         }
 
         .order-summary {
@@ -176,7 +188,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             height: fit-content;
             position: sticky;
-            top: 100px;
+            top: 20px;
         }
 
         .summary-title {
@@ -187,172 +199,114 @@
             text-align: center;
         }
 
-        .order-items {
+        .cart-items {
             margin-bottom: 25px;
         }
 
-        .order-item {
+        .cart-item {
             display: flex;
             align-items: center;
+            gap: 15px;
             padding: 15px 0;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid #e9ecef;
         }
 
-        .order-item:last-child {
+        .cart-item:last-child {
             border-bottom: none;
         }
 
-        .item-image {
+        .cart-item img {
             width: 50px;
             height: 50px;
-            border-radius: 8px;
             object-fit: cover;
-            margin-right: 15px;
+            border-radius: 10px;
         }
 
-        .item-details {
+        .cart-item-details {
             flex: 1;
         }
 
-        .item-name {
+        .cart-item-name {
             font-weight: 600;
             color: #333;
             margin-bottom: 5px;
         }
 
-        .item-price {
+        .cart-item-price {
             color: #11b671;
             font-weight: 600;
         }
 
-        .item-quantity {
+        .cart-item-quantity {
             color: #666;
             font-size: 14px;
         }
 
-        .summary-breakdown {
-            border-top: 2px solid #f0f0f0;
+        .summary-totals {
+            border-top: 2px solid #e9ecef;
             padding-top: 20px;
         }
 
         .summary-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
+            margin-bottom: 15px;
+            font-size: 16px;
         }
 
         .summary-row.total {
+            font-size: 20px;
             font-weight: 700;
-            font-size: 18px;
             color: #11b671;
-            border-top: 1px solid #f0f0f0;
+            border-top: 1px solid #e9ecef;
             padding-top: 15px;
             margin-top: 15px;
         }
 
         .place-order-btn {
             width: 100%;
-            background: linear-gradient(135deg, #11b671, #0ea55d);
+            background: #11b671;
             color: white;
             border: none;
-            padding: 18px;
+            padding: 18px 30px;
             border-radius: 15px;
             font-size: 18px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
         }
 
-        .place-order-btn:hover {
+        .place-order-btn:hover:not(:disabled) {
+            background: #0ea55e;
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(17, 182, 113, 0.3);
         }
 
         .place-order-btn:disabled {
             background: #ccc;
             cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
         }
 
-        .back-to-cart {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .back-to-cart a {
-            color: #11b671;
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .back-to-cart a:hover {
-            text-decoration: underline;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-
-        .loading i {
-            font-size: 30px;
-            animation: spin 1s linear infinite;
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
         }
 
-        .error-message {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #f5c6cb;
-        }
-
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #c3e6cb;
-        }
-
-        @media (max-width: 768px) {
-            .checkout-container {
-                padding: 10px;
-            }
-
-            .page-header h1 {
-                font-size: 28px;
-            }
-
+        /* Responsive Design */
+        @media (max-width: 1024px) {
             .checkout-content {
                 grid-template-columns: 1fr;
                 gap: 20px;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .payment-methods {
-                grid-template-columns: 1fr;
             }
 
             .order-summary {
@@ -360,31 +314,198 @@
             }
         }
 
-        @media (max-width: 480px) {
-            .page-header {
-                padding: 20px;
+        @media (max-width: 768px) {
+            .checkout-container {
+                padding: 15px;
             }
 
-            .page-header h1 {
-                font-size: 24px;
+            .page-header {
+                padding: 20px;
+                margin-bottom: 20px;
             }
 
             .checkout-form,
             .order-summary {
                 padding: 20px;
             }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .checkout-container {
+                padding: 10px;
+            }
+
+            .page-header,
+            .checkout-form,
+            .order-summary {
+                padding: 15px;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
+
+            .place-order-btn {
+                padding: 15px 20px;
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="checkout-container" style="max-width: 1400px;">
+    <div class="checkout-container">
         <div class="page-header">
-            <h1>Checkout <span>Process</span></h1>
-            <p>Complete your order with secure payment</p>
+            <h1>Checkout <span>Details</span></h1>
+            <p>Complete your order and secure payment</p>
         </div>
 
-        <div id="checkoutContent">
-            <!-- Checkout content will be loaded here -->
+        <div class="checkout-content">
+            <div class="checkout-form">
+                <form id="checkoutForm">
+                    <!-- Customer Information -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-user"></i>
+                            Customer Information
+                        </h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName" class="required">First Name</label>
+                                <input type="text" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName" class="required">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email" class="required">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone" class="required">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Address -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Delivery Address
+                        </h3>
+                        <div class="form-group full-width">
+                            <label for="address" class="required">Street Address</label>
+                            <input type="text" id="address" name="address" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city" class="required">City</label>
+                                <input type="text" id="city" name="city" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="state" class="required">State</label>
+                                <input type="text" id="state" name="state" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="zipCode" class="required">ZIP Code</label>
+                                <input type="text" id="zipCode" name="zipCode" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="country" class="required">Country</label>
+                                <input type="text" id="country" name="country" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-credit-card"></i>
+                            Payment Method
+                        </h3>
+                        <div class="payment-methods">
+                            <div class="payment-method" onclick="selectPaymentMethod('credit_card')">
+                                <input type="radio" name="paymentMethod" value="credit_card" id="credit_card">
+                                <i class="fas fa-credit-card"></i>
+                                <label for="credit_card">Credit Card</label>
+                            </div>
+                            <div class="payment-method" onclick="selectPaymentMethod('debit_card')">
+                                <input type="radio" name="paymentMethod" value="debit_card" id="debit_card">
+                                <i class="fas fa-credit-card"></i>
+                                <label for="debit_card">Debit Card</label>
+                            </div>
+                            <div class="payment-method" onclick="selectPaymentMethod('upi')">
+                                <input type="radio" name="paymentMethod" value="upi" id="upi">
+                                <i class="fas fa-mobile-alt"></i>
+                                <label for="upi">UPI</label>
+                            </div>
+                            <div class="payment-method" onclick="selectPaymentMethod('cod')">
+                                <input type="radio" name="paymentMethod" value="cod" id="cod">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <label for="cod">Cash on Delivery</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Notes -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-sticky-note"></i>
+                            Additional Notes
+                        </h3>
+                        <div class="form-group full-width">
+                            <label for="notes">Special Instructions (Optional)</label>
+                            <textarea id="notes" name="notes" placeholder="Any special delivery instructions or notes..."></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h3 class="summary-title">Order Summary</h3>
+                <div class="cart-items" id="cartItems">
+                    <!-- Cart items will be populated here -->
+                </div>
+                <div class="summary-totals">
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">₹0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax (18%):</span>
+                        <span id="tax">₹0.00</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total:</span>
+                        <span id="total">₹0.00</span>
+                    </div>
+                </div>
+                <button class="place-order-btn" onclick="placeOrder()" id="placeOrderBtn">
+                    Place Order
+                </button>
+            </div>
         </div>
     </div>
 
@@ -392,278 +513,183 @@
         let cart = [];
         let selectedPaymentMethod = '';
 
-        // Initialize checkout on page load
+        // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
-            // Gate: require login to checkout
-            fetch('session.php').then(r=>r.json()).then(s=>{
-                if(!s.username){
-                    localStorage.setItem('postLoginRedirect','checkout.html');
-                    window.location.href='login.php';
-                    return;
-                }
-                loadCart();
-            }).catch(()=>loadCart());
-            if (cart.length === 0) {
-                window.location.href = 'cart.html';
-            }
+            loadCart();
+            updateOrderSummary();
         });
 
         function loadCart() {
             cart = JSON.parse(localStorage.getItem('cart')) || [];
-            displayCheckout();
+            displayCartItems();
         }
 
-        function displayCheckout() {
-            const checkoutContent = document.getElementById('checkoutContent');
+        function displayCartItems() {
+            const container = document.getElementById('cartItems');
             
             if (cart.length === 0) {
-                checkoutContent.innerHTML = `
-                    <div style="text-align: center; padding: 60px 20px;">
-                        <i class="fas fa-shopping-cart" style="font-size: 60px; color: #ccc; margin-bottom: 20px;"></i>
-                        <h3 style="color: #666; margin-bottom: 15px;">Your cart is empty</h3>
-                        <a href="cart.html" style="color: #11b671; text-decoration: none; font-weight: 600;">Return to Cart</a>
-                    </div>
-                `;
+                container.innerHTML = '<p style="text-align: center; color: #666;">No items in cart</p>';
                 return;
             }
 
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const tax = subtotal * 0.18; // 18% GST
-            const total = subtotal + tax;
-
-            checkoutContent.innerHTML = `
-                <div class="checkout-content">
-                    <div class="checkout-form">
-                        <form id="checkoutForm" onsubmit="placeOrder(event)">
-                            <div class="form-section">
-                                <div class="section-title">
-                                    <i class="fas fa-user"></i>
-                                    Personal Information
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="firstName">First Name *</label>
-                                        <input type="text" id="firstName" name="firstName" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="lastName">Last Name *</label>
-                                        <input type="text" id="lastName" name="lastName" required>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="email">Email Address *</label>
-                                    <input type="email" id="email" name="email" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="phone">Phone Number *</label>
-                                    <input type="tel" id="phone" name="phone" required>
-                                </div>
-                            </div>
-
-                            <div class="form-section">
-                                <div class="section-title">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    Delivery Address
-                                </div>
-                                <div class="form-group">
-                                    <label for="address">Street Address *</label>
-                                    <input type="text" id="address" name="address" required>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="city">City *</label>
-                                        <input type="text" id="city" name="city" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="state">State *</label>
-                                        <input type="text" id="state" name="state" required>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="zipCode">ZIP Code *</label>
-                                        <input type="text" id="zipCode" name="zipCode" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="country">Country *</label>
-                                        <select id="country" name="country" required>
-                                            <option value="">Select Country</option>
-                                            <option value="India">India</option>
-                                            <option value="USA">USA</option>
-                                            <option value="UK">UK</option>
-                                            <option value="Canada">Canada</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-section">
-                                <div class="section-title">
-                                    <i class="fas fa-credit-card"></i>
-                                    Payment Method
-                                </div>
-                                <div class="payment-methods">
-                                    <div class="payment-method" onclick="selectPaymentMethod('card')">
-                                        <input type="radio" name="paymentMethod" value="card" id="card">
-                                        <i class="fas fa-credit-card"></i>
-                                        <div>
-                                            <div style="font-weight: 600;">Credit/Debit Card</div>
-                                            <div style="font-size: 12px; color: #666;">Visa, MasterCard, RuPay</div>
-                                        </div>
-                                    </div>
-                                    <div class="payment-method" onclick="selectPaymentMethod('upi')">
-                                        <input type="radio" name="paymentMethod" value="upi" id="upi">
-                                        <i class="fas fa-mobile-alt"></i>
-                                        <div>
-                                            <div style="font-weight: 600;">UPI Payment</div>
-                                            <div style="font-size: 12px; color: #666;">Google Pay, PhonePe, Paytm</div>
-                                        </div>
-                                    </div>
-                                    <div class="payment-method" onclick="selectPaymentMethod('cod')">
-                                        <input type="radio" name="paymentMethod" value="cod" id="cod">
-                                        <i class="fas fa-money-bill-wave"></i>
-                                        <div>
-                                            <div style="font-weight: 600;">Cash on Delivery</div>
-                                            <div style="font-size: 12px; color: #666;">Pay when you receive</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-section">
-                                <div class="section-title">
-                                    <i class="fas fa-comment"></i>
-                                    Additional Notes
-                                </div>
-                                <div class="form-group">
-                                    <label for="notes">Order Notes (Optional)</label>
-                                    <textarea id="notes" name="notes" placeholder="Any special instructions for delivery..."></textarea>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="order-summary">
-                        <div class="summary-title">Order Summary</div>
-                        
-                        <div class="order-items">
-                            ${cart.map(item => `
-                                <div class="order-item">
-                                    <img src="${item.image}" alt="${item.name}" class="item-image">
-                                    <div class="item-details">
-                                        <div class="item-name">${item.name}</div>
-                                        <div class="item-price">₹${item.price.toFixed(2)}</div>
-                                        <div class="item-quantity">Qty: ${item.quantity}</div>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-
-                        <div class="summary-breakdown">
-                            <div class="summary-row">
-                                <span>Subtotal (${cart.reduce((sum, item) => sum + item.quantity, 0)} items)</span>
-                                <span>₹${subtotal.toFixed(2)}</span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Tax (18% GST)</span>
-                                <span>₹${tax.toFixed(2)}</span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Shipping</span>
-                                <span>Free</span>
-                            </div>
-                            <div class="summary-row total">
-                                <span>Total</span>
-                                <span>₹${total.toFixed(2)}</span>
-                            </div>
-                        </div>
-
-                        <button class="place-order-btn" onclick="placeOrder()" id="placeOrderBtn">
-                            <i class="fas fa-lock"></i>
-                            Place Order Securely
-                        </button>
-
-                        <div class="back-to-cart">
-                            <a href="cart.html">
-                                <i class="fas fa-arrow-left"></i>
-                                Back to Cart
-                            </a>
-                        </div>
+            container.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img src="${item.image}" alt="${item.name}" onerror="this.src='./Images/pills.png'">
+                    <div class="cart-item-details">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">₹${item.price.toFixed(2)}</div>
+                        <div class="cart-item-quantity">Qty: ${item.quantity}</div>
                     </div>
                 </div>
-            `;
+            `).join('');
+        }
+
+        function updateOrderSummary() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.18;
+            const total = subtotal + tax;
+
+            document.getElementById('subtotal').textContent = `₹${subtotal.toFixed(2)}`;
+            document.getElementById('tax').textContent = `₹${tax.toFixed(2)}`;
+            document.getElementById('total').textContent = `₹${total.toFixed(2)}`;
         }
 
         function selectPaymentMethod(method) {
             selectedPaymentMethod = method;
             
-            // Update radio button
-            document.getElementById(method).checked = true;
-            
-            // Update visual selection
-            document.querySelectorAll('.payment-method').forEach(pm => {
-                pm.classList.remove('selected');
+            // Remove selected class from all payment methods
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
             });
+            
+            // Add selected class to clicked method
             event.currentTarget.classList.add('selected');
+            
+            // Check the radio button
+            document.getElementById(method).checked = true;
         }
 
-        function placeOrder(event) {
-            if (event) event.preventDefault();
-            
-            const form = document.getElementById('checkoutForm');
-            const formData = new FormData(form);
+        function placeOrder() {
+            const btn = document.getElementById('placeOrderBtn');
+            const originalText = btn.innerHTML;
             
             // Validate form
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return;
-            }
-            
-            if (!selectedPaymentMethod) {
-                showNotification('Please select a payment method', 'error');
+            if (!validateForm()) {
                 return;
             }
 
             // Show loading state
-            const btn = document.getElementById('placeOrderBtn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            btn.innerHTML = '<span class="loading-spinner"></span>Processing...';
             btn.disabled = true;
 
-            // Simulate payment processing and navigate to confirmation
-            setTimeout(() => {
-                // Collect order data
-                const orderData = {
-                    customer: {
-                        firstName: formData.get('firstName'),
-                        lastName: formData.get('lastName'),
-                        email: formData.get('email'),
-                        phone: formData.get('phone'),
-                        address: formData.get('address'),
-                        city: formData.get('city'),
-                        state: formData.get('state'),
-                        zipCode: formData.get('zipCode'),
-                        country: formData.get('country')
-                    },
-                    items: cart,
-                    paymentMethod: selectedPaymentMethod,
-                    notes: formData.get('notes'),
-                    orderDate: new Date().toISOString(),
-                    orderId: generateOrderId()
-                };
+            // Collect form data
+            const formData = new FormData(document.getElementById('checkoutForm'));
+            const customer = {
+                firstName: formData.get('firstName'),
+                lastName: formData.get('lastName'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                address: formData.get('address'),
+                city: formData.get('city'),
+                state: formData.get('state'),
+                zipCode: formData.get('zipCode'),
+                country: formData.get('country')
+            };
 
-                // Save order to localStorage (list)
-                const orders = JSON.parse(localStorage.getItem('orders')) || [];
-                orders.push(orderData);
-                localStorage.setItem('orders', JSON.stringify(orders));
+            const notes = formData.get('notes');
 
-                // Clear cart
-                localStorage.removeItem('cart');
-                cart = [];
+            // Create order data
+            const orderData = {
+                customer: customer,
+                items: cart,
+                paymentMethod: selectedPaymentMethod,
+                notes: notes,
+                orderDate: new Date().toISOString(),
+                orderId: generateOrderId()
+            };
 
-                // Redirect to confirmation page (ensure navigation)
-                window.location.assign(`confirmation.html?orderId=${orderData.orderId}`);
-            }, 2000);
+            // Calculate totals
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.18;
+            const total = subtotal + tax;
+
+            // Create form data for server submission
+            const serverFormData = new FormData();
+            serverFormData.append('action', 'place_order');
+            serverFormData.append('orderData', JSON.stringify(orderData));
+            serverFormData.append('total', total);
+
+            // Submit order to server
+            fetch('saveOrder.php', {
+                method: 'POST',
+                body: serverFormData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Save order to localStorage for user dashboard
+                    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+                    orders.push(orderData);
+                    localStorage.setItem('orders', orders);
+
+                    // Clear cart
+                    localStorage.removeItem('cart');
+                    cart = [];
+
+                    // Update navbar cart count
+                    if (window.navbar && window.navbar.updateCartCount) {
+                        window.navbar.updateCartCount(0);
+                    }
+
+                    // Show success message
+                    showNotification('Order placed successfully!', 'success');
+                    
+                    // Redirect to confirmation page
+                    setTimeout(() => {
+                        window.location.href = `confirmation.html?orderId=${orderData.orderId}`;
+                    }, 1500);
+                } else {
+                    throw new Error(data.message || 'Failed to place order');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Failed to place order. Please try again.', 'error');
+                
+                // Reset button
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+
+        function validateForm() {
+            const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'address', 'city', 'state', 'zipCode', 'country'];
+            
+            for (const field of requiredFields) {
+                const input = document.getElementById(field);
+                if (!input.value.trim()) {
+                    showNotification(`Please fill in ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`, 'error');
+                    input.focus();
+                    return false;
+                }
+            }
+
+            if (!selectedPaymentMethod) {
+                showNotification('Please select a payment method', 'error');
+                return false;
+            }
+
+            if (cart.length === 0) {
+                showNotification('Your cart is empty', 'error');
+                return false;
+            }
+
+            return true;
         }
 
         function generateOrderId() {
@@ -686,6 +712,8 @@
                 font-weight: 600;
                 transform: translateX(100%);
                 transition: transform 0.3s ease;
+                max-width: 300px;
+                word-wrap: break-word;
             `;
             notification.textContent = message;
             

@@ -51,9 +51,9 @@
             border-radius: 20px;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
             overflow: hidden;
-            width: 100%;
-            max-width: 980px;
-            min-height: 620px;
+            width: 90vw;
+            max-width: 1200px;
+            min-height: 90vh;
             display: flex;
         }
 

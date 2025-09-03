@@ -1,16 +1,6 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "medico";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// Include database configuration
+require_once 'config/database.php';
 
 // Create users table if it doesn't exist
 $users_sql = "CREATE TABLE IF NOT EXISTS users (
@@ -199,6 +189,6 @@ if($adminCheck->num_rows === 0){
 }
 $adminCheck->close();
 
-$conn->close();
+closeConnection($conn);
 echo "<br>Database setup completed! <a href='medico.html'>Go to Home</a>";
 ?>

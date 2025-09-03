@@ -5,11 +5,17 @@ class ModernNavbar {
     }
 
     init() {
+        // Check if navbar already exists to prevent duplicates
+        if (document.querySelector('.modern-header')) {
+            return;
+        }
+        
         this.createNavbar();
         this.handleSession();
         this.setupMobileMenu();
         this.setupSearch();
         this.setupScrollEffects();
+        this.updateCartCount();
     }
 
     createNavbar() {
@@ -52,7 +58,7 @@ class ModernNavbar {
                             <a href="user_dashboard.html" id="dashboard-link" class="auth-link" style="display:none">Dashboard</a>
                             <a href="login.php" id="sign-in-link" class="auth-link">Sign In</a>
                             <span id="username-display" class="username-display"></span>
-                            <a href="logout.php" id="logout-link" class="auth-link logout-link">Logout</a>
+                            <a href="logout.php" id="logout-link" class="auth-link logout-link" style="display:none">Logout</a>
                         </div>
                     </div>
 
@@ -73,15 +79,17 @@ class ModernNavbar {
                     <a href="cart.html" class="mobile-nav-link">Cart</a>
                     <a href="user_dashboard.html" id="mobile-dashboard-link" class="mobile-nav-link" style="display:none">Dashboard</a>
                     <a href="login.php" id="mobile-sign-in" class="mobile-nav-link">Sign In</a>
-                    <a href="logout.php" id="mobile-logout" class="mobile-nav-link">Logout</a>
+                    <a href="logout.php" id="mobile-logout" class="mobile-nav-link" style="display:none">Logout</a>
                 </nav>
             </header>
         `;
 
         // Insert navbar at the beginning of body
         document.body.insertAdjacentHTML('afterbegin', navbarHTML);
-        // expose instance for cart count updates
+        
+        // Expose instance for cart count updates
         window.navbar = this;
+        
         this.addNavbarStyles();
     }
 
@@ -107,17 +115,19 @@ class ModernNavbar {
                 .nav-container {
                     max-width: 1400px;
                     margin: 0 auto;
-                    padding: 0 20px;
+                    padding: 0 30px;
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    height: 80px;
+                    height: 85px;
+                    gap: 40px;
                 }
 
                 .logo-section {
                     display: flex;
                     align-items: center;
                     flex-shrink: 0;
+                    margin-right: 20px;
                 }
 
                 .logo-link {
@@ -126,21 +136,24 @@ class ModernNavbar {
                     text-decoration: none;
                     color: inherit;
                     transition: all 0.3s ease;
+                    padding: 8px 12px;
+                    border-radius: 12px;
                 }
 
                 .logo-link:hover {
                     transform: scale(1.05);
+                    background: rgba(17, 182, 113, 0.05);
                 }
 
                 .logo-img {
-                    width: 45px;
-                    height: 45px;
-                    margin-right: 12px;
+                    width: 48px;
+                    height: 48px;
+                    margin-right: 15px;
                     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
                 }
 
                 .logo-text {
-                    font-size: clamp(20px, 4vw, 26px);
+                    font-size: clamp(22px, 4vw, 28px);
                     font-weight: 800;
                     color: #1a1a1a;
                     letter-spacing: -0.5px;
@@ -153,19 +166,21 @@ class ModernNavbar {
 
                 .desktop-nav {
                     display: flex;
-                    gap: clamp(20px, 3vw, 35px);
+                    gap: clamp(25px, 3vw, 40px);
+                    margin: 0 20px;
                 }
 
                 .nav-link {
                     color: #333;
                     text-decoration: none;
                     font-weight: 600;
-                    font-size: clamp(14px, 2vw, 16px);
+                    font-size: clamp(15px, 2vw, 17px);
                     transition: all 0.3s ease;
                     position: relative;
-                    padding: 8px 16px;
-                    border-radius: 20px;
+                    padding: 12px 20px;
+                    border-radius: 25px;
                     white-space: nowrap;
+                    letter-spacing: 0.2px;
                 }
 
                 .nav-link:hover {
@@ -177,18 +192,17 @@ class ModernNavbar {
                 .nav-link::after {
                     content: '';
                     position: absolute;
-                    bottom: -2px;
+                    bottom: 8px;
                     left: 50%;
                     width: 0;
-                    height: 3px;
-                    background: linear-gradient(135deg, #11b671, #0ea55d);
+                    height: 2px;
+                    background: #11b671;
                     transition: all 0.3s ease;
                     transform: translateX(-50%);
-                    border-radius: 2px;
                 }
 
                 .nav-link:hover::after {
-                    width: 80%;
+                    width: 60%;
                 }
 
                 .search-section {
@@ -327,8 +341,20 @@ class ModernNavbar {
                     box-shadow: 0 4px 16px rgba(255, 71, 87, 0.3);
                 }
 
+                .username-display {
+                    color: #11b671;
+                    font-weight: 700;
+                    font-size: clamp(12px, 2vw, 14px);
+                    display: none;
+                    background: rgba(17, 182, 113, 0.1);
+                    padding: clamp(6px, 1.5vw, 8px) clamp(12px, 2vw, 16px);
+                    border-radius: 20px;
+                    border: 1px solid rgba(17, 182, 113, 0.2);
+                    white-space: nowrap;
+                }
+
                 /* Toast popups */
-                .mm-toast{
+                .mm-toast {
                     position: fixed;
                     right: 20px;
                     top: 20px;
@@ -337,7 +363,8 @@ class ModernNavbar {
                     flex-direction: column;
                     gap: 10px;
                 }
-                .mm-toast .item{
+                
+                .mm-toast .item {
                     background: #333;
                     color: #fff;
                     padding: 12px 16px;
@@ -349,20 +376,9 @@ class ModernNavbar {
                     max-width: 300px;
                     word-wrap: break-word;
                 }
-                .mm-toast .item.show{
+                
+                .mm-toast .item.show {
                     transform: translateX(0);
-                }
-
-                .username-display {
-                    color: #11b671;
-                    font-weight: 700;
-                    font-size: clamp(12px, 2vw, 14px);
-                    display: none;
-                    background: rgba(17, 182, 113, 0.1);
-                    padding: clamp(6px, 1.5vw, 8px) clamp(12px, 2vw, 16px);
-                    border-radius: 20px;
-                    border: 1px solid rgba(17, 182, 113, 0.2);
-                    white-space: nowrap;
                 }
 
                 .mobile-menu-btn {
@@ -393,7 +409,7 @@ class ModernNavbar {
                     display: none;
                     background: rgba(255, 255, 255, 0.98);
                     backdrop-filter: blur(20px);
-                    padding: 20px;
+                    padding: 25px;
                     border-top: 1px solid rgba(17, 182, 113, 0.1);
                     box-shadow: 0 8px 32px rgba(0,0,0,0.1);
                     animation: slideDown 0.3s ease;
@@ -408,18 +424,20 @@ class ModernNavbar {
                     display: block;
                     color: #333;
                     text-decoration: none;
-                    padding: 18px 0;
-                    border-bottom: 1px solid rgba(0,0,0,0.1);
+                    padding: 20px 0;
+                    border-bottom: 1px solid rgba(0,0,0,0.08);
                     font-weight: 600;
                     transition: all 0.3s ease;
-                    font-size: 16px;
+                    font-size: 17px;
+                    letter-spacing: 0.2px;
                 }
 
                 .mobile-nav-link:hover {
                     color: #11b671;
-                    padding-left: 15px;
+                    padding-left: 20px;
                     background: rgba(17, 182, 113, 0.05);
-                    border-radius: 8px;
+                    border-radius: 12px;
+                    transform: translateX(5px);
                 }
 
                 .mobile-nav-link:last-child {
@@ -429,7 +447,8 @@ class ModernNavbar {
                 /* Responsive Design */
                 @media (max-width: 1200px) {
                     .nav-container {
-                        padding: 0 15px;
+                        padding: 0 20px;
+                        gap: 30px;
                     }
                     
                     .desktop-nav {
@@ -438,13 +457,14 @@ class ModernNavbar {
                     
                     .search-section {
                         margin: 0 20px;
-                        max-width: 300px;
+                        max-width: 350px;
                     }
                 }
 
                 @media (max-width: 1024px) {
                     .nav-container {
-                        padding: 0 15px;
+                        padding: 0 20px;
+                        gap: 25px;
                     }
                     
                     .desktop-nav {
@@ -453,7 +473,7 @@ class ModernNavbar {
                     
                     .search-section {
                         margin: 0 15px;
-                        max-width: 250px;
+                        max-width: 300px;
                     }
 
                     .user-actions {
@@ -471,8 +491,9 @@ class ModernNavbar {
                     }
 
                     .nav-container {
-                        padding: 0 15px;
+                        padding: 0 20px;
                         height: 70px;
+                        gap: 20px;
                     }
 
                     .logo-text {
@@ -482,77 +503,46 @@ class ModernNavbar {
                     .logo-img {
                         width: 40px;
                         height: 40px;
+                        margin-right: 10px;
                     }
 
                     .user-actions {
                         gap: 12px;
                     }
 
-                    .auth-link {
-                        padding: 8px 14px;
-                        font-size: 13px;
-                    }
-
-                    .cart-link {
-                        font-size: 20px;
+                    .auth-section {
+                        gap: 10px;
                     }
                 }
 
                 @media (max-width: 480px) {
                     .nav-container {
+                        padding: 0 15px;
                         height: 65px;
-                        padding: 0 12px;
+                    }
+
+                    .logo-text {
+                        font-size: 18px;
                     }
 
                     .logo-img {
                         width: 35px;
                         height: 35px;
-                    }
-
-                    .logo-text {
-                        font-size: 18px;
-                    }
-
-                    .cart-link {
-                        font-size: 18px;
-                    }
-
-                    .auth-link {
-                        padding: 6px 10px;
-                        font-size: 12px;
-                    }
-
-                    .mobile-nav {
-                        padding: 15px;
+                        margin-right: 8px;
                     }
 
                     .user-actions {
                         gap: 8px;
                     }
-                }
 
-                @media (max-width: 360px) {
-                    .nav-container {
-                        padding: 0 8px;
-                    }
-
-                    .logo-img {
-                        width: 30px;
-                        height: 30px;
-                        margin-right: 8px;
-                    }
-
-                    .logo-text {
-                        font-size: 16px;
+                    .cart-link {
+                        font-size: 18px;
+                        padding: 8px;
                     }
 
                     .auth-link {
-                        padding: 5px 8px;
-                        font-size: 11px;
-                    }
-
-                    .cart-link {
-                        font-size: 16px;
+                        padding: 6px 12px;
+                        font-size: 12px;
                     }
                 }
             </style>
@@ -562,45 +552,40 @@ class ModernNavbar {
     }
 
     handleSession() {
-        fetch('session.php')
+        // Check if user is logged in
+        fetch('./session.php')
             .then(response => response.json())
             .then(data => {
-                const usernameDisplay = document.getElementById("username-display");
-                const signInLink = document.getElementById("sign-in-link");
-                const logoutLink = document.getElementById("logout-link");
-                const mobileSignIn = document.getElementById("mobile-sign-in");
-                const mobileLogout = document.getElementById("mobile-logout");
-                const dashboardLink = document.getElementById("dashboard-link");
-                const mobileDashboardLink = document.getElementById("mobile-dashboard-link");
-
                 if (data.username) {
-                    usernameDisplay.textContent = `Hello, ${data.username}`;
-                    usernameDisplay.style.display = "inline";
-                    signInLink.style.display = "none";
-                    logoutLink.style.display = "inline";
-                    mobileSignIn.style.display = "none";
-                    mobileLogout.style.display = "block";
+                    // User is logged in
+                    document.getElementById('sign-in-link').style.display = 'none';
+                    document.getElementById('mobile-sign-in').style.display = 'none';
+                    document.getElementById('logout-link').style.display = 'inline-block';
+                    document.getElementById('mobile-logout').style.display = 'block';
                     
-                    // Check if user is admin
-                    if (data.username === 'TheAdmin') {
-                        dashboardLink.style.display = "inline";
-                        mobileDashboardLink.style.display = "block";
+                    if (data.isAdmin) {
+                        document.getElementById('dashboard-link').style.display = 'inline-block';
+                        document.getElementById('mobile-dashboard-link').style.display = 'block';
                     } else {
-                        dashboardLink.style.display = "none";
-                        mobileDashboardLink.style.display = "none";
+                        document.getElementById('dashboard-link').style.display = 'inline-block';
+                        document.getElementById('mobile-dashboard-link').style.display = 'block';
                     }
+                    
+                    document.getElementById('username-display').textContent = data.username;
+                    document.getElementById('username-display').style.display = 'inline-block';
                 } else {
-                    usernameDisplay.style.display = "none";
-                    signInLink.style.display = "inline";
-                    logoutLink.style.display = "none";
-                    mobileSignIn.style.display = "block";
-                    mobileLogout.style.display = "none";
-                    dashboardLink.style.display = "none";
-                    mobileDashboardLink.style.display = "none";
+                    // User is not logged in
+                    document.getElementById('sign-in-link').style.display = 'inline-block';
+                    document.getElementById('mobile-sign-in').style.display = 'block';
+                    document.getElementById('logout-link').style.display = 'none';
+                    document.getElementById('mobile-logout').style.display = 'none';
+                    document.getElementById('dashboard-link').style.display = 'none';
+                    document.getElementById('mobile-dashboard-link').style.display = 'none';
+                    document.getElementById('username-display').style.display = 'none';
                 }
             })
             .catch(error => {
-                console.error('Error checking session:', error);
+                console.log('Session check failed:', error);
             });
     }
 
@@ -615,6 +600,7 @@ class ModernNavbar {
             if (isOpen) {
                 mobileNav.style.display = 'block';
                 mobileMenuBtn.classList.add('active');
+                
                 // Animate hamburger to X
                 mobileMenuBtn.querySelectorAll('span').forEach((span, index) => {
                     if (index === 0) span.style.transform = 'rotate(45deg) translate(5px, 5px)';
@@ -624,6 +610,7 @@ class ModernNavbar {
             } else {
                 mobileNav.style.display = 'none';
                 mobileMenuBtn.classList.remove('active');
+                
                 // Reset hamburger
                 mobileMenuBtn.querySelectorAll('span').forEach(span => {
                     span.style.transform = 'none';
@@ -638,6 +625,7 @@ class ModernNavbar {
                 mobileNav.style.display = 'none';
                 mobileMenuBtn.classList.remove('active');
                 isOpen = false;
+                
                 // Reset hamburger
                 mobileMenuBtn.querySelectorAll('span').forEach(span => {
                     span.style.transform = 'none';
@@ -652,6 +640,7 @@ class ModernNavbar {
                 mobileNav.style.display = 'none';
                 mobileMenuBtn.classList.remove('active');
                 isOpen = false;
+                
                 // Reset hamburger
                 mobileMenuBtn.querySelectorAll('span').forEach(span => {
                     span.style.transform = 'none';
@@ -725,5 +714,16 @@ class ModernNavbar {
 
 // Initialize navbar when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new ModernNavbar();
+    if (!document.querySelector('.modern-header')) {
+        const nav = new ModernNavbar();
+        // Fetch initial cart count
+        fetch('./api/cart_api.php')
+            .then(r => r.json())
+            .then(d => {
+                if (d && d.success && typeof d.item_count !== 'undefined') {
+                    nav.updateCartCount(d.item_count);
+                }
+            })
+            .catch(() => {});
+    }
 });

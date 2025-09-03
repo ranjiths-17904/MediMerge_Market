@@ -11,6 +11,11 @@ class MediMergeChatbot {
     }
 
     init() {
+        // Check if chatbot already exists to prevent duplicates
+        if (document.querySelector('.medimerge-chatbot')) {
+            return;
+        }
+        
         this.createChatbot();
         this.setupEventListeners();
         this.loadInitialMessage();
@@ -111,19 +116,20 @@ class MediMergeChatbot {
                     height: 500px;
                     background: white;
                     border-radius: 20px;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
                     display: none;
+                    flex-direction: column;
                     overflow: hidden;
+                }
+
+                .chatbot-widget.open {
+                    display: flex;
                     animation: slideUp 0.3s ease;
                 }
 
                 @keyframes slideUp {
-                    from { opacity: 0; transform: translateY(20px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-
-                .chatbot-widget.active {
-                    display: block;
+                    from { transform: translateY(20px); opacity: 0; }
+                    to { transform: translateY(0); opacity: 1; }
                 }
 
                 .chatbot-header {
@@ -131,25 +137,25 @@ class MediMergeChatbot {
                     color: white;
                     padding: 20px;
                     display: flex;
-                    align-items: center;
                     justify-content: space-between;
+                    align-items: center;
                 }
 
                 .header-content {
                     display: flex;
                     align-items: center;
-                    gap: 12px;
+                    gap: 15px;
                 }
 
                 .chatbot-logo {
-                    width: 32px;
-                    height: 32px;
+                    width: 40px;
+                    height: 40px;
                     border-radius: 50%;
                 }
 
                 .header-text h3 {
                     margin: 0;
-                    font-size: 16px;
+                    font-size: 18px;
                     font-weight: 600;
                 }
 
@@ -162,7 +168,7 @@ class MediMergeChatbot {
                     background: none;
                     border: none;
                     color: white;
-                    font-size: 18px;
+                    font-size: 20px;
                     cursor: pointer;
                     padding: 5px;
                     border-radius: 50%;
@@ -170,64 +176,52 @@ class MediMergeChatbot {
                 }
 
                 .chatbot-close:hover {
-                    background: rgba(255, 255, 255, 0.2);
+                    background: rgba(255,255,255,0.2);
+                    transform: scale(1.1);
                 }
 
                 .chatbot-messages {
-                    height: 350px;
-                    overflow-y: auto;
+                    flex: 1;
                     padding: 20px;
-                    background: #f8f9fa;
+                    overflow-y: auto;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 15px;
                 }
 
-                .chatbot-message {
-                    margin: 10px 0;
+                .message {
                     max-width: 80%;
-                    animation: fadeIn 0.3s ease;
+                    padding: 12px 16px;
+                    border-radius: 18px;
+                    font-size: 14px;
+                    line-height: 1.4;
                 }
 
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(10px); }
-                    to { opacity: 1; transform: translateY(0); }
+                .message.user {
+                    background: #f0f0f0;
+                    color: #333;
+                    align-self: flex-end;
+                    border-bottom-right-radius: 6px;
                 }
 
-                .message-user {
-                    margin-left: auto;
+                .message.bot {
                     background: linear-gradient(135deg, #11b671, #0ea55d);
                     color: white;
-                    padding: 12px 16px;
-                    border-radius: 18px 18px 4px 18px;
-                }
-
-                .message-bot {
-                    background: white;
-                    color: #333;
-                    padding: 12px 16px;
-                    border-radius: 18px 18px 18px 4px;
-                    border: 1px solid #e1e1e1;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                }
-
-                .message-time {
-                    font-size: 11px;
-                    opacity: 0.7;
-                    margin-top: 4px;
-                    text-align: right;
+                    align-self: flex-start;
+                    border-bottom-left-radius: 6px;
                 }
 
                 .chatbot-input {
                     padding: 20px;
                     border-top: 1px solid #eee;
-                    background: white;
                     display: flex;
                     gap: 10px;
-                    align-items: center;
                 }
 
                 .chatbot-input input {
                     flex: 1;
                     padding: 12px 16px;
-                    border: 2px solid #e1e1e1;
+                    border: 2px solid #e8e8e8;
                     border-radius: 25px;
                     outline: none;
                     font-size: 14px;
@@ -240,66 +234,42 @@ class MediMergeChatbot {
                 }
 
                 .chatbot-input button {
-                    background: #11b671;
-                    color: white;
+                    background: linear-gradient(135deg, #11b671, #0ea55d);
                     border: none;
-                    width: 40px;
-                    height: 40px;
                     border-radius: 50%;
+                    width: 44px;
+                    height: 44px;
+                    color: white;
                     cursor: pointer;
+                    transition: all 0.3s ease;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    transition: all 0.3s ease;
                 }
 
                 .chatbot-input button:hover {
-                    background: #0ea55d;
                     transform: scale(1.1);
+                    box-shadow: 0 4px 12px rgba(17, 182, 113, 0.3);
                 }
 
                 .chatbot-input button:disabled {
-                    background: #ccc;
+                    opacity: 0.6;
                     cursor: not-allowed;
+                    transform: none;
                 }
 
-                .typing-indicator {
-                    display: flex;
-                    gap: 4px;
-                    padding: 12px 16px;
-                    background: white;
-                    border-radius: 18px 18px 18px 4px;
-                    border: 1px solid #e1e1e1;
-                    max-width: 60px;
-                }
-
-                .typing-dot {
-                    width: 8px;
-                    height: 8px;
-                    background: #11b671;
-                    border-radius: 50%;
-                    animation: typing 1.4s infinite ease-in-out;
-                }
-
-                .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-                .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-
-                @keyframes typing {
-                    0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-                    40% { transform: scale(1); opacity: 1; }
-                }
-
-                @media (max-width: 768px) {
-                    .chatbot-widget {
-                        width: 300px;
-                        right: -50px;
-                    }
-                }
-
+                /* Responsive Design */
                 @media (max-width: 480px) {
                     .chatbot-widget {
-                        width: 280px;
-                        right: -80px;
+                        width: 320px;
+                        height: 450px;
+                        right: -10px;
+                    }
+                    
+                    .chatbot-toggle {
+                        width: 55px;
+                        height: 55px;
+                        font-size: 22px;
                     }
                 }
             </style>
@@ -310,25 +280,32 @@ class MediMergeChatbot {
 
     setupEventListeners() {
         const toggle = document.getElementById('chatbot-toggle');
+        const widget = document.getElementById('chatbot-widget');
         const close = document.getElementById('chatbot-close');
         const input = document.getElementById('chatbot-input');
         const send = document.getElementById('chatbot-send');
 
-        toggle.addEventListener('click', () => this.toggleChatbot());
-        close.addEventListener('click', () => this.toggleChatbot());
-        
+        toggle.addEventListener('click', () => {
+            this.toggleChatbot();
+        });
+
+        close.addEventListener('click', () => {
+            this.closeChatbot();
+        });
+
+        send.addEventListener('click', () => {
+            this.sendMessage();
+        });
+
         input.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 this.sendMessage();
             }
         });
 
-        send.addEventListener('click', () => this.sendMessage());
-
-        // Close when clicking outside
+        // Close chatbot when clicking outside
         document.addEventListener('click', (e) => {
-            const chatbot = document.getElementById('medimerge-chatbot');
-            if (!chatbot.contains(e.target)) {
+            if (!e.target.closest('.medimerge-chatbot')) {
                 this.closeChatbot();
             }
         });
@@ -344,27 +321,34 @@ class MediMergeChatbot {
 
     openChatbot() {
         const widget = document.getElementById('chatbot-widget');
-        widget.classList.add('active');
+        widget.classList.add('open');
         this.isOpen = true;
         
-        // Focus input
+        // Focus on input
         setTimeout(() => {
             document.getElementById('chatbot-input').focus();
         }, 300);
-
-        // Hide notification dot
-        const dot = document.querySelector('.notification-dot');
-        if (dot) dot.style.display = 'none';
     }
 
     closeChatbot() {
         const widget = document.getElementById('chatbot-widget');
-        widget.classList.remove('active');
+        widget.classList.remove('open');
         this.isOpen = false;
     }
 
     loadInitialMessage() {
-        this.addMessage('Hi! I\'m your MediMerge assistant. How can I help you today?', 'bot');
+        const messages = document.getElementById('chatbot-messages');
+        const welcomeMessage = `
+            <div class="message bot">
+                Hello! 👋 I'm your MediMerge assistant. How can I help you today? You can ask me about:
+                <br>• Product information
+                <br>• Order status
+                <br>• Payment methods
+                <br>• Shipping details
+                <br>• General questions
+            </div>
+        `;
+        messages.innerHTML = welcomeMessage;
     }
 
     sendMessage() {
@@ -377,124 +361,54 @@ class MediMergeChatbot {
         this.addMessage(message, 'user');
         input.value = '';
 
-        // Show typing indicator
-        this.showTypingIndicator();
+        // Disable send button while processing
+        const sendBtn = document.getElementById('chatbot-send');
+        sendBtn.disabled = true;
 
         // Simulate bot response
         setTimeout(() => {
-            this.hideTypingIndicator();
-            const response = this.getBotResponse(message);
+            const response = this.generateResponse(message);
             this.addMessage(response, 'bot');
-        }, 1000 + Math.random() * 1000);
+            sendBtn.disabled = false;
+        }, 1000);
     }
 
     addMessage(text, sender) {
         const messages = document.getElementById('chatbot-messages');
         const messageDiv = document.createElement('div');
-        messageDiv.className = `chatbot-message message-${sender}`;
-        
-        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
-        messageDiv.innerHTML = `
-            ${text}
-            <div class="message-time">${time}</div>
-        `;
+        messageDiv.className = `message ${sender}`;
+        messageDiv.textContent = text;
         
         messages.appendChild(messageDiv);
         messages.scrollTop = messages.scrollHeight;
     }
 
-    showTypingIndicator() {
-        const messages = document.getElementById('chatbot-messages');
-        const typing = document.createElement('div');
-        typing.className = 'chatbot-message typing-indicator';
-        typing.id = 'typing-indicator';
-        typing.innerHTML = `
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
-        `;
-        messages.appendChild(typing);
-        messages.scrollTop = messages.scrollHeight;
-    }
-
-    hideTypingIndicator() {
-        const typing = document.getElementById('typing-indicator');
-        if (typing) {
-            typing.remove();
-        }
-    }
-
-    getBotResponse(message) {
-        const lowerMessage = message.toLowerCase();
+    generateResponse(userMessage) {
+        const message = userMessage.toLowerCase();
         
-        // Product related queries
-        if (lowerMessage.includes('product') || lowerMessage.includes('medicine')) {
-            return 'We have a wide range of medicines and healthcare products. You can browse our products page or use the search function to find specific items!';
-        }
-        
-        // Order related queries
-        if (lowerMessage.includes('order') || lowerMessage.includes('track')) {
-            return 'You can track your orders in your Dashboard. All orders are processed within 24 hours and you\'ll receive email updates!';
-        }
-        
-        // Payment related queries
-        if (lowerMessage.includes('payment') || lowerMessage.includes('upi') || lowerMessage.includes('card') || lowerMessage.includes('cod')) {
-            return 'We accept all major credit/debit cards, UPI (Google Pay, PhonePe, Paytm), and Cash on Delivery. All online payments are secure and encrypted!';
-        }
-        
-        // Delivery related queries
-        if (lowerMessage.includes('delivery') || lowerMessage.includes('shipping')) {
-            return 'We offer free delivery on all orders above ₹500. Standard delivery takes 3-5 business days. Express delivery is available for urgent orders!';
-        }
-        
-        // Return/Refund queries
-        if (lowerMessage.includes('return') || lowerMessage.includes('refund')) {
-            return 'We have a 7-day return policy for unopened items. Contact our support team for assistance with returns and refunds.';
-        }
-        
-        // Support queries
-        if (lowerMessage.includes('help') || lowerMessage.includes('support') || lowerMessage.includes('contact')) {
-            return 'I\'m here to help! For specific inquiries, contact our support team at support@medimerge.com or call +91-1234567890.';
-        }
-        
-        // Price related queries
-        if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('expensive')) {
-            return 'Our prices are competitive and we often have special offers and discounts. Check our products page for current pricing and deals!';
-        }
-        
-        // Health related queries
-        if (lowerMessage.includes('health') || lowerMessage.includes('sick') || lowerMessage.includes('doctor')) {
-            return 'I can help you find products, but for medical advice, please consult a healthcare professional. We recommend speaking with your doctor before starting any new medication.';
-        }
-        
-        // Default response
-        return 'Thank you for your question! I\'m here to help with products, orders, payments, delivery, and any other concerns. Feel free to ask anything specific!';
-    }
-
-    // Public method to add custom responses
-    addCustomResponse(pattern, response) {
-        if (!this.customResponses) {
-            this.customResponses = [];
-        }
-        this.customResponses.push({ pattern, response });
-    }
-
-    // Method to show notification
-    showNotification() {
-        const dot = document.querySelector('.notification-dot');
-        if (dot) {
-            dot.style.display = 'block';
+        if (message.includes('product') || message.includes('medicine')) {
+            return "We offer a wide range of healthcare products including medicines, supplements, and medical devices. You can browse our products on the Products page or use the search function to find specific items.";
+        } else if (message.includes('order') || message.includes('track')) {
+            return "To track your order, please check your order confirmation email or contact our customer support. You can also view your order history in your dashboard.";
+        } else if (message.includes('payment') || message.includes('pay')) {
+            return "We accept various payment methods including credit/debit cards, net banking, UPI, and cash on delivery. All online payments are secure and encrypted.";
+        } else if (message.includes('shipping') || message.includes('delivery')) {
+            return "We offer fast and reliable delivery across India. Standard delivery takes 2-3 business days. Express delivery is available for select locations.";
+        } else if (message.includes('return') || message.includes('refund')) {
+            return "We have a hassle-free return policy. If you're not satisfied with your purchase, you can return it within 7 days of delivery. Contact our support team for assistance.";
+        } else if (message.includes('contact') || message.includes('support')) {
+            return "You can reach our customer support team at support@medimerge.com or call us at +91-XXXXXXXXXX. We're available 24/7 to help you.";
+        } else if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+            return "Hello! How can I assist you today? Feel free to ask any questions about our products or services.";
+        } else {
+            return "Thank you for your message. I'm here to help with any questions about MediMerge. You can ask about products, orders, payments, shipping, or general inquiries.";
         }
     }
 }
 
-// Auto-initialize chatbot when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    window.medimergeChatbot = new MediMergeChatbot();
+// Initialize chatbot when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    if (!document.querySelector('.medimerge-chatbot')) {
+        new MediMergeChatbot();
+    }
 });
-
-// Export for module systems
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = MediMergeChatbot;
-}

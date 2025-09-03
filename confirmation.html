@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmation - MediMerge</title>
+    <title>Order Confirmed - MediMerge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="navbar.js"></script>
-    <script src="include-chatbot.js"></script>
+    <script src="./navbar.js"></script>
+    <script src="./chatbot-component.js"></script>
     <style>
         * {
             margin: 0;
@@ -18,75 +19,221 @@
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
+            color: #333;
         }
 
-        .confirmation-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        .success-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 25px;
-            padding: 50px;
+        .confirmation-header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            padding: 60px 20px;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .confirmation-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .confirmation-header-content {
+            position: relative;
+            z-index: 2;
         }
 
         .success-icon {
             width: 100px;
             height: 100px;
-            background: linear-gradient(135deg, #11b671, #0ea55d);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 30px;
-            color: white;
-            font-size: 50px;
-            animation: bounce 1s ease;
+            margin: 0 auto 20px;
+            font-size: 3rem;
+            animation: bounce 1s ease-in-out;
         }
 
         @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-20px); }
-            60% { transform: translateY(-10px); }
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
         }
 
-        .success-title {
-            font-size: 32px;
+        .confirmation-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .confirmation-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            font-weight: 400;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .confirmation-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .confirmation-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .order-id {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.2rem;
             font-weight: 700;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .success-subtitle {
-            font-size: 18px;
-            color: #666;
+            display: inline-block;
             margin-bottom: 30px;
         }
 
         .order-details {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
+            background: white;
             border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             margin-bottom: 30px;
         }
 
         .order-details h3 {
-            font-size: 24px;
+            font-size: 1.5rem;
             font-weight: 700;
             color: #333;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             text-align: center;
         }
 
-        .detail-row {
+        .detail-section {
+            margin-bottom: 30px;
+        }
+
+        .detail-section h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .detail-item {
+            text-align: left;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .order-items {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .order-items h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .item-details {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .item-price {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        .order-summary {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .order-summary h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .summary-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -94,75 +241,26 @@
             border-bottom: 1px solid #f0f0f0;
         }
 
-        .detail-row:last-child {
+        .summary-row:last-child {
             border-bottom: none;
-            font-weight: 700;
-            color: #11b671;
-            font-size: 18px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #333;
         }
 
-        .detail-label {
+        .summary-label {
             color: #666;
             font-weight: 500;
         }
 
-        .detail-value {
-            color: #333;
-            font-weight: 600;
-        }
-
-        .next-steps {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        }
-
-        .next-steps h3 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .step-item {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 20px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .step-item:last-child {
-            border-bottom: none;
-        }
-
-        .step-number {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #11b671, #0ea55d);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 18px;
-        }
-
-        .step-content h4 {
-            font-size: 18px;
+        .summary-value {
             font-weight: 600;
             color: #333;
-            margin-bottom: 5px;
         }
 
-        .step-content p {
-            color: #666;
-            line-height: 1.5;
+        .summary-value.total {
+            color: #667eea;
+            font-size: 1.5rem;
         }
 
         .action-buttons {
@@ -172,60 +270,109 @@
             flex-wrap: wrap;
         }
 
-        .action-btn {
+        .btn {
             padding: 15px 30px;
-            border: none;
             border-radius: 25px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
         }
 
-        .primary-btn {
-            background: linear-gradient(135deg, #11b671, #0ea55d);
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
         }
 
-        .secondary-btn {
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
-            border: 2px solid #e1e1e1;
-        }
-
-        .action-btn:hover {
+        .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
         }
 
-        .primary-btn:hover {
-            box-shadow: 0 10px 25px rgba(17, 182, 113, 0.3);
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .delivery-info {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .delivery-info h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .delivery-info p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px;
+            border: 1px solid #fcc;
         }
 
         @media (max-width: 768px) {
-            .confirmation-container {
-                padding: 20px 15px;
+            .confirmation-header {
+                padding: 40px 20px;
             }
 
-            .success-card {
+            .confirmation-container {
+                margin: 20px auto;
+            }
+
+            .confirmation-card,
+            .order-details,
+            .order-items,
+            .order-summary {
                 padding: 30px 20px;
             }
 
-            .success-title {
-                font-size: 28px;
-            }
-
-            .success-subtitle {
-                font-size: 16px;
-            }
-
-            .order-details,
-            .next-steps {
-                padding: 20px;
+            .detail-grid {
+                grid-template-columns: 1fr;
             }
 
             .action-buttons {
@@ -233,192 +380,228 @@
                 align-items: center;
             }
 
-            .action-btn {
+            .btn {
                 width: 100%;
                 max-width: 300px;
-                justify-content: center;
             }
         }
 
         @media (max-width: 480px) {
-            .success-card {
+            .confirmation-container {
+                padding: 0 15px;
+            }
+
+            .confirmation-card,
+            .order-details,
+            .order-items,
+            .order-summary {
                 padding: 25px 15px;
             }
 
-            .success-title {
-                font-size: 24px;
-            }
-
-            .detail-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-
-            .step-item {
+            .order-item {
                 flex-direction: column;
                 text-align: center;
-                gap: 15px;
+                gap: 10px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="confirmation-container">
-        <!-- Success Message -->
-        <div class="success-card">
+    <!-- Confirmation Header -->
+    <section class="confirmation-header">
+        <div class="confirmation-header-content">
             <div class="success-icon">
                 <i class="fas fa-check"></i>
             </div>
-            <h1 class="success-title">Order Confirmed!</h1>
-            <p class="success-subtitle">Thank you for your purchase. Your order has been successfully placed and is being processed.</p>
+            <h1 class="confirmation-title">Order Confirmed!</h1>
+            <p class="confirmation-subtitle">Thank you for your order. We're processing it and will deliver it soon!</p>
         </div>
+    </section>
 
-        <!-- Order Details -->
-        <div class="order-details">
-            <h3>Order Details</h3>
-            <div id="orderDetails">
-                <!-- Order details will be populated here -->
+    <!-- Confirmation Container -->
+    <div class="confirmation-container">
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading order details...</p>
+        </div>
+        
+        <div id="error" class="error-message" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p id="errorText"></p>
+        </div>
+        
+        <div id="confirmationContent" style="display: none;">
+            <!-- Order Confirmation Card -->
+            <div class="confirmation-card">
+                <div class="order-id" id="orderId">Order #12345</div>
+                <h2>Your order has been successfully placed!</h2>
+                <p>We've received your order and are preparing it for delivery. You'll receive an email confirmation shortly.</p>
             </div>
-        </div>
 
-        <!-- Next Steps -->
-        <div class="next-steps">
-            <h3>What Happens Next?</h3>
-            <div class="step-item">
-                <div class="step-number">1</div>
-                <div class="step-content">
-                    <h4>Order Processing</h4>
-                    <p>We'll verify your order and prepare it for shipping within 24 hours.</p>
+            <!-- Order Details -->
+            <div class="order-details">
+                <h3><i class="fas fa-user"></i> Customer Information</h3>
+                <div class="detail-section">
+                    <div class="detail-grid" id="customerInfo">
+                        <!-- Customer details will be loaded here -->
+                    </div>
                 </div>
             </div>
-            <div class="step-item">
-                <div class="step-number">2</div>
-                <div class="step-content">
-                    <h4>Shipping & Delivery</h4>
-                    <p>Your order will be shipped and delivered to your address within 3-5 business days.</p>
-                </div>
-            </div>
-            <div class="step-item">
-                <div class="step-number">3</div>
-                <div class="step-content">
-                    <h4>Order Tracking</h4>
-                    <p>You'll receive email updates and can track your order in your Dashboard.</p>
-                </div>
-            </div>
-        </div>
 
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-            <a href="user_dashboard.html" class="action-btn primary-btn">
-                <i class="fas fa-tachometer-alt"></i>
-                View Dashboard
-            </a>
-            <a href="product.html" class="action-btn secondary-btn">
-                <i class="fas fa-shopping-cart"></i>
-                Continue Shopping
-            </a>
+            <!-- Order Items -->
+            <div class="order-items">
+                <h3><i class="fas fa-shopping-bag"></i> Order Items</h3>
+                <div class="item-list" id="orderItems">
+                    <!-- Order items will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h3><i class="fas fa-calculator"></i> Order Summary</h3>
+                <div class="summary-row">
+                    <span class="summary-label">Items:</span>
+                    <span class="summary-value" id="itemCount">0</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Subtotal:</span>
+                    <span class="summary-value" id="subtotal">₹0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Shipping:</span>
+                    <span class="summary-value">Free</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Total:</span>
+                    <span class="summary-value total" id="total">₹0.00</span>
+                </div>
+            </div>
+
+            <!-- Delivery Information -->
+            <div class="delivery-info">
+                <h3><i class="fas fa-truck"></i> Delivery Information</h3>
+                <p>Your order will be delivered within 2-3 business days. You'll receive tracking information via email once your order ships.</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="medico.html" class="btn btn-primary">
+                    <i class="fas fa-home"></i> Continue Shopping
+                </a>
+                <a href="dashboard.php" class="btn btn-secondary">
+                    <i class="fas fa-user"></i> View Orders
+                </a>
+            </div>
         </div>
     </div>
 
     <script>
-        // Get order details from URL parameters
-        function getOrderDetails() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const orderId = urlParams.get('orderId');
-            
-            // Get order from localStorage
-            const orders = JSON.parse(localStorage.getItem('orders')) || [];
-            const currentOrder = orders.find(order => order.orderId === orderId);
-            
-            if (currentOrder) {
-                displayOrderDetails(currentOrder);
-            } else {
-                // Fallback if order not found
-                displayFallbackOrder();
-            }
-        }
+        let orderData = null;
 
-        function displayOrderDetails(order) {
-            const orderDetails = document.getElementById('orderDetails');
-            
-            const subtotal = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const tax = subtotal * 0.18;
-            const total = subtotal + tax;
-            
-            orderDetails.innerHTML = `
-                <div class="detail-row">
-                    <span class="detail-label">Order ID:</span>
-                    <span class="detail-value">${order.orderId}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Order Date:</span>
-                    <span class="detail-value">${new Date(order.orderDate).toLocaleDateString()}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Customer:</span>
-                    <span class="detail-value">${order.customer.firstName} ${order.customer.lastName}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Email:</span>
-                    <span class="detail-value">${order.customer.email}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Phone:</span>
-                    <span class="detail-value">${order.customer.phone}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Delivery Address:</span>
-                    <span class="detail-value">${order.customer.address}, ${order.customer.city}, ${order.customer.state} ${order.customer.zipCode}, ${order.customer.country}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Payment Method:</span>
-                    <span class="detail-value">${order.paymentMethod.toUpperCase()}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Items:</span>
-                    <span class="detail-value">${order.items.reduce((sum, item) => sum + item.quantity, 0)} products</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Total Amount:</span>
-                    <span class="detail-value">₹${total.toFixed(2)}</span>
-                </div>
-            `;
-        }
-
-        function displayFallbackOrder() {
-            const orderDetails = document.getElementById('orderDetails');
-            orderDetails.innerHTML = `
-                <div class="detail-row">
-                    <span class="detail-label">Order ID:</span>
-                    <span class="detail-value">${new URLSearchParams(window.location.search).get('orderId') || 'N/A'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Order Date:</span>
-                    <span class="detail-value">${new Date().toLocaleDateString()}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Status:</span>
-                    <span class="detail-value">Confirmed</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Message:</span>
-                    <span class="detail-value">Order details will be available in your dashboard</span>
-                </div>
-            `;
-        }
-
-        // Initialize page
+        // Load order details on page load
         document.addEventListener('DOMContentLoaded', function() {
-            getOrderDetails();
-            
-            // Show success toast if navbar is available
-            if (window.navbar && window.navbar.showToast) {
-                setTimeout(() => {
-                    window.navbar.showToast('Order placed successfully! 🎉');
-                }, 1000);
-            }
+            loadOrderDetails();
+            initNavbar(); // Initialize navbar
+            initChatbot(); // Initialize chatbot
         });
+
+        async function loadOrderDetails() {
+            try {
+                // Get order ID from URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                const orderId = urlParams.get('order_id');
+                
+                if (!orderId) {
+                    throw new Error('No order ID provided');
+                }
+
+                // Load order details from the API
+                const response = await fetch(`./admin/orders_api.php?order_id=${orderId}`);
+                const data = await response.json();
+                
+                if (data.success && data.order) {
+                    orderData = data.order;
+                    displayOrderConfirmation();
+                } else {
+                    throw new Error(data.message || 'Failed to load order details');
+                }
+            } catch (error) {
+                showError('Failed to load order details: ' + error.message);
+            }
+        }
+
+        function displayOrderConfirmation() {
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const confirmationContent = document.getElementById('confirmationContent');
+            
+            loading.style.display = 'none';
+            error.style.display = 'none';
+            confirmationContent.style.display = 'block';
+
+            // Display order ID
+            document.getElementById('orderId').textContent = `Order #${orderData.id}`;
+
+            // Display customer information
+            const customerInfo = document.getElementById('customerInfo');
+            customerInfo.innerHTML = `
+                <div class="detail-item">
+                    <div class="detail-label">Name</div>
+                    <div class="detail-value">${orderData.customer_name}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Email</div>
+                    <div class="detail-value">${orderData.customer_email}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Phone</div>
+                    <div class="detail-value">${orderData.customer_phone}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Address</div>
+                    <div class="detail-value">${orderData.customer_address}</div>
+                </div>
+            `;
+
+            // Display order items
+            const orderItems = document.getElementById('orderItems');
+            orderItems.innerHTML = orderData.items.map(item => `
+                <div class="order-item">
+                    <div class="item-info">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-details">Qty: ${item.quantity} × ₹${item.price}</div>
+                    </div>
+                    <div class="item-price">₹${(item.price * item.quantity).toFixed(2)}</div>
+                </div>
+            `).join('');
+
+            // Update summary
+            document.getElementById('itemCount').textContent = orderData.items.length;
+            document.getElementById('subtotal').textContent = `₹${orderData.total.toFixed(2)}`;
+            document.getElementById('total').textContent = `₹${orderData.total.toFixed(2)}`;
+        }
+
+        function showError(message) {
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const errorText = document.getElementById('errorText');
+            
+            loading.style.display = 'none';
+            errorText.textContent = message;
+            error.style.display = 'block';
+        }
+
+        function initNavbar() {
+            if (typeof ModernNavbar !== 'undefined') {
+                new ModernNavbar();
+            }
+        }
+
+        function initChatbot() {
+            if (typeof MediMergeChatbot !== 'undefined') {
+                new MediMergeChatbot();
+            }
+        }
     </script>
 </body>
 </html>

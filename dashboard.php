@@ -1,24 +1,14 @@
 <?php
 session_start();
 
-// Check if the user is logged in
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
+// Check if the user is logged in and is admin
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['username']) || $_SESSION['username'] !== 'TheAdmin') {
     header('Location: login.php');
     exit();
 }
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "medico";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// Include database configuration
+require_once 'config/database.php';
 
 // Handle product operations
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -91,7 +81,7 @@ $products_result = $conn->query($products_sql);
 $users_sql = "SELECT id, username, email FROM users";
 $users_result = $conn->query($users_sql);
 
-$conn->close();
+closeConnection($conn);
 ?>
 
 <!DOCTYPE html>

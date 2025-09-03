@@ -1,0 +1,17 @@
+RewriteEngine On
+
+# Handle the main project path
+RewriteRule ^MediMerge-Market/?$ mini%20world%20project/ [L,R=301]
+
+# Allow direct access to PHP files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ mini%20world%20project/$1 [L]
+
+# Set default index file
+DirectoryIndex index.php index.html
+
+# Enable CORS for local development
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization"

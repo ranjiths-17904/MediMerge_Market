@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediMerge - Your Health, Our Priority</title>
+    <title>MediMerge - Your Trusted Healthcare Partner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="navbar.js"></script>
+    <script src="./navbar.js"></script>
+    <script src="./chatbot-component.js"></script>
     <style>
         * {
             margin: 0;
@@ -23,7 +25,7 @@
         .hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: clamp(60px, 10vw, 120px) 20px;
+            padding: 120px 20px 80px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -36,79 +38,65 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            animation: float 20s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
         }
 
         .hero-content {
             position: relative;
             z-index: 2;
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
         .hero h1 {
-            font-size: clamp(32px, 6vw, 64px);
+            font-size: clamp(2.5rem, 6vw, 4rem);
             font-weight: 800;
             margin-bottom: 20px;
-            line-height: 1.2;
-        }
-
-        .hero h1 span {
-            color: #11b671;
-            text-shadow: 0 2px 4px rgba(17, 182, 113, 0.3);
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
         .hero p {
-            font-size: clamp(16px, 3vw, 20px);
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
             margin-bottom: 30px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
             opacity: 0.9;
+            line-height: 1.6;
         }
 
-        .cta-buttons {
+        .hero-buttons {
             display: flex;
             gap: 20px;
             justify-content: center;
             flex-wrap: wrap;
         }
 
-        .cta-btn {
-            padding: clamp(12px, 2.5vw, 18px) clamp(24px, 4vw, 36px);
-            border: none;
-            border-radius: 50px;
-            font-size: clamp(14px, 2.5vw, 16px);
-            font-weight: 600;
+        .btn {
+            padding: 15px 30px;
+            border-radius: 25px;
             text-decoration: none;
+            font-weight: 600;
             transition: all 0.3s ease;
             display: inline-block;
+            font-size: 1rem;
         }
 
-        .cta-btn.primary {
-            background: #11b671;
-            color: white;
+        .btn-primary {
+            background: white;
+            color: #667eea;
         }
 
-        .cta-btn.primary:hover {
-            background: #0ea55e;
+        .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(17, 182, 113, 0.3);
+            box-shadow: 0 10px 25px rgba(255,255,255,0.3);
         }
 
-        .cta-btn.secondary {
+        .btn-secondary {
             background: transparent;
             color: white;
             border: 2px solid white;
         }
 
-        .cta-btn.secondary:hover {
+        .btn-secondary:hover {
             background: white;
             color: #667eea;
             transform: translateY(-3px);
@@ -116,28 +104,29 @@
 
         /* Features Section */
         .features {
-            padding: clamp(60px, 8vw, 100px) 20px;
+            padding: 80px 20px;
             background: #f8f9fa;
         }
 
-        .features-container {
+        .container {
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: clamp(40px, 6vw, 60px);
+            margin-bottom: 60px;
         }
 
         .section-header h2 {
-            font-size: clamp(28px, 5vw, 40px);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
             color: #333;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .section-header p {
-            font-size: clamp(16px, 2.5vw, 18px);
+            font-size: 1.1rem;
             color: #666;
             max-width: 600px;
             margin: 0 auto;
@@ -151,35 +140,36 @@
 
         .feature-card {
             background: white;
-            padding: 30px;
+            padding: 40px 30px;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
         }
 
         .feature-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
 
         .feature-icon {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #11b671, #0ea55d);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 32px;
+            margin: 0 auto 25px;
             color: white;
+            font-size: 2rem;
         }
 
         .feature-card h3 {
-            font-size: clamp(20px, 3vw, 24px);
-            color: #333;
+            font-size: 1.5rem;
+            font-weight: 700;
             margin-bottom: 15px;
+            color: #333;
         }
 
         .feature-card p {
@@ -189,33 +179,28 @@
 
         /* Products Preview */
         .products-preview {
-            padding: clamp(60px, 8vw, 100px) 20px;
+            padding: 80px 20px;
             background: white;
-        }
-
-        .products-container {
-            max-width: 1200px;
-            margin: 0 auto;
         }
 
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
             margin-top: 40px;
         }
 
         .product-card {
             background: white;
-            border-radius: 15px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
         }
 
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
 
         .product-image {
@@ -225,101 +210,130 @@
         }
 
         .product-info {
-            padding: 20px;
+            padding: 25px;
+        }
+
+        .product-category {
+            color: #667eea;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 10px;
         }
 
         .product-name {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 1.2rem;
+            font-weight: 700;
             color: #333;
             margin-bottom: 10px;
         }
 
         .product-price {
-            font-size: 20px;
-            color: #11b671;
-            font-weight: 700;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #667eea;
             margin-bottom: 15px;
         }
 
-        .view-products-btn {
-            background: #11b671;
+        .add-to-cart-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: 600;
+            padding: 12px;
+            border-radius: 10px;
             cursor: pointer;
+            font-weight: 600;
             transition: all 0.3s ease;
-            width: 100%;
         }
 
-        .view-products-btn:hover {
-            background: #0ea55e;
+        .add-to-cart-btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .view-all-btn {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .view-all-btn .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+        }
+
+        .view-all-btn .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
         }
 
         /* Contact Section */
         .contact {
-            padding: clamp(60px, 8vw, 100px) 20px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        }
-
-        .contact-container {
-            max-width: 1200px;
-            margin: 0 auto;
+            padding: 80px 20px;
+            background: #f8f9fa;
         }
 
         .contact-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
             align-items: center;
         }
 
         .contact-info h3 {
-            font-size: clamp(24px, 4vw, 32px);
-            color: #333;
+            font-size: 2rem;
+            font-weight: 700;
             margin-bottom: 20px;
+            color: #333;
         }
 
         .contact-info p {
-            font-size: 16px;
             color: #666;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             line-height: 1.6;
         }
 
-        .contact-methods {
+        .contact-details {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
         }
 
-        .contact-method {
+        .contact-item {
             display: flex;
             align-items: center;
             gap: 15px;
-            color: #333;
         }
 
-        .contact-method i {
-            width: 40px;
-            height: 40px;
-            background: #11b671;
-            color: white;
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .contact-text h4 {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .contact-text p {
+            color: #666;
+            margin: 0;
         }
 
         .contact-form {
             background: white;
-            padding: 30px;
+            padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         .form-group {
@@ -337,58 +351,52 @@
         .form-group textarea {
             width: 100%;
             padding: 12px 15px;
-            border: 2px solid #e1e1e1;
+            border: 2px solid #e1e5e9;
             border-radius: 10px;
-            font-size: 16px;
-            outline: none;
+            font-size: 1rem;
             transition: all 0.3s ease;
         }
 
         .form-group input:focus,
         .form-group textarea:focus {
-            border-color: #11b671;
-            box-shadow: 0 0 0 3px rgba(17, 182, 113, 0.1);
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .form-group textarea {
             resize: vertical;
-            min-height: 100px;
+            min-height: 120px;
         }
 
         .submit-btn {
-            background: #11b671;
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 16px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            width: 100%;
         }
 
         .submit-btn:hover {
-            background: #0ea55e;
             transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
 
         /* Footer */
         .footer {
-            background: #1a1a1a;
+            background: #333;
             color: white;
             padding: 40px 20px;
             text-align: center;
         }
 
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
         .footer p {
             margin-bottom: 20px;
-            opacity: 0.8;
         }
 
         .social-links {
@@ -401,45 +409,30 @@
         .social-link {
             width: 40px;
             height: 40px;
-            background: #11b671;
-            color: white;
+            background: #667eea;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: white;
             text-decoration: none;
             transition: all 0.3s ease;
         }
 
         .social-link:hover {
-            background: #0ea55e;
+            background: #764ba2;
             transform: translateY(-3px);
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
             .hero {
-                padding: 80px 20px;
+                padding: 100px 20px 60px;
             }
 
-            .cta-buttons {
+            .hero-buttons {
                 flex-direction: column;
                 align-items: center;
-            }
-
-            .cta-btn {
-                width: 100%;
-                max-width: 300px;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-
-            .products-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 20px;
             }
 
             .contact-content {
@@ -447,29 +440,30 @@
                 gap: 30px;
             }
 
-            .contact-form {
-                padding: 20px;
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             }
         }
 
         @media (max-width: 480px) {
-            .hero {
-                padding: 60px 15px;
+            .hero h1 {
+                font-size: 2rem;
             }
 
-            .features,
-            .products-preview,
-            .contact {
-                padding: 40px 15px;
+            .hero p {
+                font-size: 1rem;
             }
 
-            .feature-card,
-            .product-card {
-                padding: 20px;
+            .feature-card {
+                padding: 30px 20px;
             }
 
             .contact-form {
-                padding: 15px;
+                padding: 30px 20px;
             }
         }
     </style>
@@ -478,50 +472,64 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <h1>Your Health, Our <span>Priority</span></h1>
-            <p>Discover a comprehensive range of healthcare products and medicines. Quality care delivered to your doorstep with convenience and reliability.</p>
-            <div class="cta-buttons">
-                <a href="product.html" class="cta-btn primary">Shop Now</a>
-                <a href="#features" class="cta-btn secondary">Learn More</a>
+            <h1>Your Trusted Healthcare Partner</h1>
+            <p>Access quality medicines and healthcare products with ease and convenience. MediMerge brings you the best in pharmaceutical care.</p>
+            <div class="hero-buttons">
+                <a href="product.html" class="btn btn-primary">Shop Now</a>
+                <a href="#features" class="btn btn-secondary">Learn More</a>
             </div>
         </div>
     </section>
 
     <!-- Features Section -->
     <section class="features" id="features">
-        <div class="features-container">
+        <div class="container">
             <div class="section-header">
                 <h2>Why Choose MediMerge?</h2>
-                <p>We're committed to providing you with the best healthcare experience possible</p>
+                <p>We provide comprehensive healthcare solutions with the highest standards of quality and service.</p>
             </div>
             <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Quality Assured</h3>
+                    <p>All our products are sourced from certified manufacturers and meet the highest quality standards.</p>
+                </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-shipping-fast"></i>
                     </div>
                     <h3>Fast Delivery</h3>
-                    <p>Get your medicines delivered to your doorstep within 24-48 hours with our reliable delivery service.</p>
+                    <p>Quick and reliable delivery to your doorstep with secure packaging and real-time tracking.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-certificate"></i>
+                        <i class="fas fa-user-md"></i>
                     </div>
-                    <h3>Quality Assured</h3>
-                    <p>All our products are sourced from authorized distributors and meet the highest quality standards.</p>
+                    <h3>Expert Support</h3>
+                    <p>24/7 customer support and consultation from healthcare professionals for all your queries.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-user-shield"></i>
+                        <i class="fas fa-credit-card"></i>
                     </div>
-                    <h3>Secure Shopping</h3>
-                    <p>Your personal information and payment details are protected with bank-level security measures.</p>
+                    <h3>Secure Payment</h3>
+                    <p>Multiple secure payment options including cards, UPI, and cash on delivery for your convenience.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-headset"></i>
+                        <i class="fas fa-pills"></i>
                     </div>
-                    <h3>24/7 Support</h3>
-                    <p>Our customer support team is available round the clock to assist you with any queries.</p>
+                    <h3>Wide Range</h3>
+                    <p>Extensive collection of medicines, healthcare products, and wellness supplements for all your needs.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Customer First</h3>
+                    <p>Your health and satisfaction are our top priorities. We're committed to providing the best service.</p>
                 </div>
             </div>
         </div>
@@ -529,54 +537,23 @@
 
     <!-- Products Preview -->
     <section class="products-preview">
-        <div class="products-container">
+        <div class="container">
             <div class="section-header">
                 <h2>Featured Products</h2>
-                <p>Explore our handpicked selection of essential healthcare products</p>
+                <p>Discover our most popular healthcare products and medicines</p>
             </div>
-            <div class="products-grid">
-                <div class="product-card">
-                    <img src="./Images/aspirin.jpeg" alt="Aspirin" class="product-image">
-                    <div class="product-info">
-                        <h3 class="product-name">Aspirin</h3>
-                        <div class="product-price">₹5.00</div>
-                        <button class="view-products-btn">View Details</button>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <img src="./Images/vicks.png" alt="Vicks" class="product-image">
-                    <div class="product-info">
-                        <h3 class="product-name">Vicks VapoRub</h3>
-                        <div class="product-price">₹120.00</div>
-                        <button class="view-products-btn">View Details</button>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <img src="./Images/insulin.jpg" alt="Insulin" class="product-image">
-                    <div class="product-info">
-                        <h3 class="product-name">Insulin Injection</h3>
-                        <div class="product-price">₹450.00</div>
-                        <button class="view-products-btn">View Details</button>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <img src="./Images/creatine.jpeg" alt="Creatine" class="product-image">
-                    <div class="product-info">
-                        <h3 class="product-name">Creatine Monohydrate</h3>
-                        <div class="product-price">₹800.00</div>
-                        <button class="view-products-btn">View Details</button>
-                    </div>
-                </div>
+            <div class="products-grid" id="featuredProducts">
+                <!-- Products will be loaded dynamically -->
             </div>
-            <div style="text-align: center; margin-top: 40px;">
-                <a href="product.html" class="cta-btn primary">View All Products</a>
+            <div class="view-all-btn">
+                <a href="product.html" class="btn">View All Products</a>
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
     <section class="contact" id="contact">
-        <div class="contact-container">
+        <div class="container">
             <div class="section-header">
                 <h2>Get in Touch</h2>
                 <p>Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
@@ -584,19 +561,34 @@
             <div class="contact-content">
                 <div class="contact-info">
                     <h3>Let's talk about everything!</h3>
-                    <p>Don't hesitate to reach out to us. We're here to help and answer any questions you might have.</p>
-                    <div class="contact-methods">
-                        <div class="contact-method">
-                            <i class="fas fa-phone"></i>
-                            <span>+91 98765 43210</span>
+                    <p>Don't like forms? That's cool, just send us an email at support@medimerge.com</p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Address</h4>
+                                <p>123 Healthcare Street, Medical District, City - 12345</p>
+                            </div>
                         </div>
-                        <div class="contact-method">
-                            <i class="fas fa-envelope"></i>
-                            <span>info@medimerge.com</span>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Phone</h4>
+                                <p>+1 (555) 123-4567</p>
+                            </div>
                         </div>
-                        <div class="contact-method">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>123 Health Street, Medical District, City - 123456</span>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Email</h4>
+                                <p>support@medimerge.com</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -611,6 +603,10 @@
                             <input type="email" id="email" name="email" required>
                         </div>
                         <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" required>
+                        </div>
+                        <div class="form-group">
                             <label for="message">Message</label>
                             <textarea id="message" name="message" required></textarea>
                         </div>
@@ -623,34 +619,112 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-content">
+        <div class="container">
             <div class="social-links">
                 <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
                 <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
                 <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
             </div>
-            <p>&copy; 2024 MediMerge. All rights reserved.</p>
-            <p>Your trusted partner in healthcare</p>
+            <p>&copy; 2024 MediMerge. All rights reserved. Your trusted healthcare partner.</p>
         </div>
     </footer>
 
     <script>
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+        // Load featured products
+        async function loadFeaturedProducts() {
+            try {
+                const response = await fetch('./products_api.php');
+                const data = await response.json();
+                
+                if (data.success && data.products.length > 0) {
+                    // Show first 6 products as featured
+                    const featuredProducts = data.products.slice(0, 6);
+                    displayFeaturedProducts(featuredProducts);
                 }
-            });
-        });
+            } catch (error) {
+                console.error('Failed to load featured products:', error);
+            }
+        }
 
-        // Contact form handling
+        function displayFeaturedProducts(products) {
+            const container = document.getElementById('featuredProducts');
+            
+            container.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}" class="product-image" 
+                         onerror="this.src='./Images/pills.png'">
+                    <div class="product-info">
+                        <div class="product-category">${product.category}</div>
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">₹${product.price}</div>
+                        <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function addToCart(productId) {
+            try {
+                const response = await fetch('./api/cart_api.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        quantity: 1
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update cart count in navbar
+                    if (window.navbar && window.navbar.updateCartCount) {
+                        window.navbar.updateCartCount(data.cart_count);
+                    }
+                    
+                    // Show success message
+                    showToast('Product added to cart!', 'success');
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                showToast('Failed to add product to cart', 'error');
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#28a745' : '#dc3545'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 1000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.style.transform = 'translateX(0)', 100);
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 3000);
+        }
+
+        // Handle contact form submission
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -658,26 +732,31 @@
             const formData = new FormData(this);
             const name = formData.get('name');
             const email = formData.get('email');
+            const subject = formData.get('subject');
             const message = formData.get('message');
             
             // Simple validation
-            if (!name || !email || !message) {
-                alert('Please fill in all fields');
+            if (!name || !email || !subject || !message) {
+                showToast('Please fill in all fields', 'error');
                 return;
             }
             
-            // Show success message
-            alert('Thank you for your message! We\'ll get back to you soon.');
-            
-            // Reset form
+            // Show success message (in a real app, you'd send this to a server)
+            showToast('Message sent successfully! We\'ll get back to you soon.', 'success');
             this.reset();
         });
 
-        // Product card click handlers
-        document.querySelectorAll('.view-products-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                window.location.href = 'product.html';
-            });
+        // Load featured products when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFeaturedProducts();
+            
+            // Initialize navbar and chatbot
+            if (typeof ModernNavbar !== 'undefined') {
+                new ModernNavbar();
+            }
+            if (typeof MediMergeChatbot !== 'undefined') {
+                new MediMergeChatbot();
+            }
         });
     </script>
 </body>

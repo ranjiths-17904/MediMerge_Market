@@ -1,75 +1,62 @@
 <?php
 // Test database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "medico";
+require_once 'config/database.php';
 
-echo "<h2>Testing Database Connection</h2>";
+echo "<h2>Database Connection Test</h2>";
 
-try {
-    $conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->ping()) {
+    echo "<p style='color: green;'>✅ Database connection successful!</p>";
     
-    if ($conn->connect_error) {
-        echo "<p style='color: red;'>❌ Connection failed: " . $conn->connect_error . "</p>";
-    } else {
-        echo "<p style='color: green;'>✅ Database connection successful!</p>";
-        
-        // Test products table
-        $sql = "SELECT COUNT(*) as count FROM products";
-        $result = $conn->query($sql);
-        
-        if ($result) {
-            $row = $result->fetch_assoc();
-            echo "<p>📦 Products in database: " . $row['count'] . "</p>";
+    // Test if tables exist
+    $tables = ['users', 'products', 'orders'];
+    $all_tables_exist = true;
+    
+    foreach ($tables as $table) {
+        $result = $conn->query("SHOW TABLES LIKE '$table'");
+        if ($result->num_rows > 0) {
+            echo "<p style='color: green;'>✅ Table '$table' exists</p>";
         } else {
-            echo "<p style='color: orange;'>⚠️ Products table query failed: " . $conn->error . "</p>";
+            echo "<p style='color: red;'>❌ Table '$table' missing</p>";
+            $all_tables_exist = false;
         }
-        
-        // Test users table
-        $sql = "SELECT COUNT(*) as count FROM users";
-        $result = $conn->query($sql);
-        
-        if ($result) {
-            $row = $result->fetch_assoc();
-            echo "<p>👥 Users in database: " . $row['count'] . "</p>";
-        } else {
-            echo "<p style='color: orange;'>⚠️ Users table query failed: " . $conn->error . "</p>";
-        }
-        
-        // Test orders table
-        $sql = "SELECT COUNT(*) as count FROM orders";
-        $result = $conn->query($sql);
-        
-        if ($result) {
-            $row = $result->fetch_assoc();
-            echo "<p>📋 Orders in database: " . $row['count'] . "</p>";
-        } else {
-            echo "<p style='color: orange;'>⚠️ Orders table query failed: " . $conn->error . "</p>";
-        }
-        
-        // Check admin user
-        $sql = "SELECT username, email FROM users WHERE username = 'TheAdmin'";
-        $result = $conn->query($sql);
-        
-        if ($result && $result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            echo "<p>👑 Admin user found: " . $row['username'] . " (" . $row['email'] . ")</p>";
-        } else {
-            echo "<p style='color: orange;'>⚠️ Admin user not found</p>";
-        }
-        
-        $conn->close();
     }
-} catch (Exception $e) {
-    echo "<p style='color: red;'>❌ Exception: " . $e->getMessage() . "</p>";
+    
+    if ($all_tables_exist) {
+        // Check if sample data exists
+        $result = $conn->query("SELECT COUNT(*) as count FROM products");
+        $row = $result->fetch_assoc();
+        
+        if ($row['count'] > 0) {
+            echo "<p style='color: green;'>✅ Products table has {$row['count']} products</p>";
+        } else {
+            echo "<p style='color: orange;'>⚠️ Products table is empty - run setup_database.php</p>";
+        }
+        
+        $result = $conn->query("SELECT COUNT(*) as count FROM users");
+        $row = $result->fetch_assoc();
+        
+        if ($row['count'] > 0) {
+            echo "<p style='color: green;'>✅ Users table has {$row['count']} users</p>";
+        } else {
+            echo "<p style='color: orange;'>⚠️ Users table is empty - run setup_database.php</p>";
+        }
+        
+        echo "<p><a href='setup_database.php'>🔧 Run Database Setup</a></p>";
+        echo "<p><a href='medico.html'>🏠 Go to Homepage</a></p>";
+    } else {
+        echo "<p style='color: red;'>❌ Some tables are missing. Please run setup_database.php</p>";
+        echo "<p><a href='setup_database.php'>🔧 Run Database Setup</a></p>";
+    }
+    
+} else {
+    echo "<p style='color: red;'>❌ Database connection failed!</p>";
+    echo "<p>Please check:</p>";
+    echo "<ul>";
+    echo "<li>XAMPP MySQL service is running</li>";
+    echo "<li>Database 'medico' exists</li>";
+    echo "<li>Database credentials in config/database.php</li>";
+    echo "</ul>";
 }
 
-echo "<hr>";
-echo "<h3>PHP Info</h3>";
-echo "<p>PHP Version: " . phpversion() . "</p>";
-echo "<p>MySQL Extension: " . (extension_loaded('mysqli') ? '✅ Loaded' : '❌ Not Loaded') . "</p>";
-
-echo "<hr>";
-echo "<p><a href='medico.html'>← Back to Home</a></p>";
+closeConnection($conn);
 ?>

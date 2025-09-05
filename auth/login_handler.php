@@ -23,9 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     
-    // Check if user exists
-    $stmt = $conn->prepare("SELECT id, username, email, password FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
+    // Check if user exists (check both username and email)
+    $stmt = $conn->prepare("SELECT id, username, email, password FROM users WHERE username = ? OR email = ?");
+    $stmt->bind_param("ss", $username, $username);
     $stmt->execute();
     $result = $stmt->get_result();
     

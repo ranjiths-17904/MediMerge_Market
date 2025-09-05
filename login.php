@@ -26,13 +26,13 @@
         .auth-container {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border-radius: 25px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
             overflow: hidden;
             width: 100%;
-            max-width: 900px;
+            max-width: 720px;
             display: flex;
-            min-height: 600px;
+            min-height: 520px;
         }
 
         .auth-image {
@@ -78,20 +78,20 @@
         }
 
         .auth-image .logo {
-            width: 80px;
-            height: 80px;
+            width: 64px;
+            height: 64px;
             margin: 0 auto 20px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 1.6rem;
         }
 
         .auth-forms {
             flex: 1;
-            padding: 50px;
+            padding: 36px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -107,7 +107,7 @@
 
         .form-header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 24px;
         }
 
         .form-header h2 {
@@ -136,7 +136,7 @@
 
         .form-group input {
             width: 100%;
-            padding: 15px 20px;
+            padding: 12px 16px;
             border: 2px solid #e1e5e9;
             border-radius: 12px;
             font-size: 1rem;
@@ -173,13 +173,13 @@
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 1.1rem;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .submit-btn:hover {
@@ -276,7 +276,7 @@
         @media (max-width: 768px) {
             .auth-container {
                 flex-direction: column;
-                max-width: 500px;
+                max-width: 420px;
             }
 
             .auth-image {
@@ -288,11 +288,11 @@
             }
 
             .auth-forms {
-                padding: 30px 20px;
+                padding: 24px 18px;
             }
 
             .form-header h2 {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
             }
         }
 
@@ -307,7 +307,7 @@
             }
 
             .form-group input {
-                padding: 12px 15px;
+                padding: 10px 12px;
             }
         }
     </style>
@@ -365,6 +365,7 @@
                 <div class="form-footer">
                     <p>Don't have an account?</p>
                     <button class="toggle-form" onclick="toggleForm('signup')">Create Account</button>
+                    <p style="margin-top: 10px;"><a href="#" onclick="showForgotPassword()" style="color: #667eea; text-decoration: none;">Forgot Password?</a></p>
                 </div>
             </div>
 
@@ -569,6 +570,13 @@
                 setLoading('signupBtn', false);
             }
         });
+
+        function showForgotPassword() {
+            const email = prompt('Enter your email address to reset password:');
+            if (email) {
+                alert('Password reset link has been sent to ' + email + '\n\nNote: This is a demo. In production, implement actual password reset functionality.');
+            }
+        }
 
         // Check if user is already logged in
         document.addEventListener('DOMContentLoaded', async function() {

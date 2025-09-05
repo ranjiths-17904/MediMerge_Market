@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="./navbar.js"></script>
     <script src="./chatbot-component.js"></script>
+    <script src="./notification-component.js"></script>
     <style>
         * {
             margin: 0;
@@ -25,7 +26,7 @@
         .hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 120px 20px 80px;
+            padding: 80px 20px 60px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -50,15 +51,15 @@
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-size: clamp(2rem, 5vw, 3.5rem);
             font-weight: 800;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
         .hero p {
-            font-size: clamp(1.1rem, 3vw, 1.3rem);
-            margin-bottom: 30px;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            margin-bottom: 25px;
             opacity: 0.9;
             line-height: 1.6;
         }
@@ -71,13 +72,13 @@
         }
 
         .btn {
-            padding: 15px 30px;
-            border-radius: 25px;
+            padding: 12px 25px;
+            border-radius: 20px;
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s ease;
             display: inline-block;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
         .btn-primary {
@@ -104,7 +105,7 @@
 
         /* Features Section */
         .features {
-            padding: 80px 20px;
+            padding: 60px 20px;
             background: #f8f9fa;
         }
 
@@ -115,7 +116,7 @@
 
         .section-header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 40px;
         }
 
         .section-header h2 {
@@ -134,16 +135,16 @@
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
         }
 
         .feature-card {
             background: white;
-            padding: 40px 30px;
-            border-radius: 20px;
+            padding: 30px 25px;
+            border-radius: 15px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
             transition: all 0.3s ease;
         }
 

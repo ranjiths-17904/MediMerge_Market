@@ -37,35 +37,28 @@ switch ($method) {
     case 'PUT':
         // Update order status
         $input = json_decode(file_get_contents('php://input'), true);
-        
-        if (!$input) {
-            $input = $_POST;
-        }
-        
+        if (!$input) { $input = $_POST; }
         $order_id = $input['order_id'] ?? '';
         $status = $input['status'] ?? '';
-        
         if (empty($order_id) || empty($status)) {
             echo json_encode(['success' => false, 'message' => 'Order ID and status are required']);
             exit;
         }
-        
         $valid_statuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
         if (!in_array($status, $valid_statuses)) {
             echo json_encode(['success' => false, 'message' => 'Invalid status']);
             exit;
         }
-        
-        $sql = "UPDATE orders SET order_status = ? WHERE order_id = ?";
+        $sql = "UPDATE orders SET order_status = ?, updated_at = CURRENT_TIMESTAMP WHERE order_id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ss", $status, $order_id);
-        
         if ($stmt->execute()) {
-            echo json_encode(['success' => true, 'message' => 'Order status updated successfully']);
+            // Simple notification stub (log)
+            error_log("Order $order_id status updated to $status");
+            echo json_encode(['success' => true, 'message' => 'Order status updated']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Error updating order status: ' . $stmt->error]);
         }
-        
         $stmt->close();
         break;
         

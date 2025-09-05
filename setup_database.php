@@ -8,6 +8,13 @@ $users_sql = "CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) UNIQUE NOT NULL,
     username VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
+    phone VARCHAR(20),
+    address TEXT,
+    city VARCHAR(100),
+    state VARCHAR(100),
+    zip_code VARCHAR(20),
+    country VARCHAR(100),
+    is_admin BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )";
 
@@ -146,6 +153,7 @@ if ($row['count'] == 0) {
 $orders_sql = "CREATE TABLE IF NOT EXISTS orders (
     id INT(11) AUTO_INCREMENT PRIMARY KEY,
     order_id VARCHAR(100) UNIQUE NOT NULL,
+    user_id INT(11),
     customer_name VARCHAR(255) NOT NULL,
     customer_email VARCHAR(255) NOT NULL,
     customer_phone VARCHAR(50) NOT NULL,
@@ -153,15 +161,72 @@ $orders_sql = "CREATE TABLE IF NOT EXISTS orders (
     items JSON NOT NULL,
     total_amount DECIMAL(10,2) NOT NULL,
     payment_method VARCHAR(50) NOT NULL,
+    payment_status ENUM('pending', 'completed', 'failed') DEFAULT 'pending',
     order_status ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled') DEFAULT 'pending',
+    transaction_id VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 )";
 
 if ($conn->query($orders_sql) === TRUE) {
     echo "Orders table created successfully or already exists<br>";
 } else {
     echo "Error creating orders table: " . $conn->error . "<br>";
+}
+
+// Create admin_users table for admin functionality
+$admin_users_sql = "CREATE TABLE IF NOT EXISTS admin_users (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('super_admin', 'admin', 'moderator') DEFAULT 'admin',
+    permissions JSON,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)";
+
+if ($conn->query($admin_users_sql) === TRUE) {
+    echo "Admin users table created successfully or already exists<br>";
+} else {
+    echo "Error creating admin users table: " . $conn->error . "<br>";
+}
+
+// Create chat_messages table for chatbot
+$chat_sql = "CREATE TABLE IF NOT EXISTS chat_messages (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    user_id INT(11),
+    session_id VARCHAR(255),
+    message TEXT NOT NULL,
+    response TEXT NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+)";
+
+if ($conn->query($chat_sql) === TRUE) {
+    echo "Chat messages table created successfully or already exists<br>";
+} else {
+    echo "Error creating chat messages table: " . $conn->error . "<br>";
+}
+
+// Create notifications table
+$notifications_sql = "CREATE TABLE IF NOT EXISTS notifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NULL,
+    user_type ENUM('user', 'admin') DEFAULT 'user',
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    type ENUM('info', 'success', 'warning', 'error') DEFAULT 'info',
+    order_id INT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+)";
+
+if ($conn->query($notifications_sql) === TRUE) {
+    echo "Notifications table created successfully or already exists<br>";
+} else {
+    echo "Error creating notifications table: " . $conn->error . "<br>";
 }
 
 // Ensure admin user exists with correct credentials
@@ -172,8 +237,8 @@ $adminCheck->execute();
 $adminCheck->store_result();
 if($adminCheck->num_rows === 0){
     $adminEmail = 'AdminMM@gmail.com';
-    $adminPass = password_hash('Admin@MM', PASSWORD_DEFAULT); // Fixed password
-    $ins = $conn->prepare("INSERT INTO users (email, username, password) VALUES (?,?,?)");
+    $adminPass = password_hash('Admin@MM', PASSWORD_DEFAULT);
+    $ins = $conn->prepare("INSERT INTO users (email, username, password, is_admin) VALUES (?,?,?,TRUE)");
     if($ins){
         $ins->bind_param('sss', $adminEmail, $adminUser, $adminPass);
         if($ins->execute()){
@@ -189,6 +254,28 @@ if($adminCheck->num_rows === 0){
 }
 $adminCheck->close();
 
+// Create admin user in admin_users table
+$adminUserCheck = $conn->prepare("SELECT id FROM admin_users WHERE username=?");
+$adminUserCheck->bind_param('s', $adminUser);
+$adminUserCheck->execute();
+$adminUserCheck->store_result();
+if($adminUserCheck->num_rows === 0){
+    $adminEmail = 'AdminMM@gmail.com';
+    $adminPass = password_hash('Admin@MM', PASSWORD_DEFAULT);
+    $ins = $conn->prepare("INSERT INTO admin_users (username, email, password, role) VALUES (?,?,?,'super_admin')");
+    if($ins){
+        $ins->bind_param('sss', $adminUser, $adminEmail, $adminPass);
+        if($ins->execute()){
+            echo "Admin user added to admin_users table successfully!<br>";
+        }
+        $ins->close();
+    }
+} else {
+    echo "Admin user already exists in admin_users table.<br>";
+}
+$adminUserCheck->close();
+
 closeConnection($conn);
 echo "<br>Database setup completed! <a href='medico.html'>Go to Home</a>";
 ?>
+    

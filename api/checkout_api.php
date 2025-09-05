@@ -79,9 +79,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $customer_phone = $input['customer']['phone'];
     $customer_address = $input['customer']['address'] . ', ' . $input['customer']['city'] . ', ' . $input['customer']['state'] . ' ' . $input['customer']['zipCode'] . ', ' . $input['customer']['country'];
     $payment_method = $input['paymentMethod'] ?? 'Cash on Delivery';
+    $fulfillment = $input['fulfillment'] ?? 'delivery';
+
+    // Delivery fee logic: ₹15 per item if delivery
+    $itemCount = 0;
+    foreach ($cart_items as $ci) { $itemCount += intval($ci['quantity']); }
+    $delivery_fee = ($fulfillment === 'delivery') ? (15 * $itemCount) : 0;
+    $total_amount = $total_amount + $delivery_fee;
     
     // Insert order into database
-    $stmt = $conn->prepare("INSERT INTO orders (order_id, customer_name, customer_email, customer_phone, customer_address, items, total_amount, payment_method) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO orders (order_id, customer_name, customer_email, customer_phone, customer_address, items, total_amount, payment_method, order_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')");
     
     $items_json = json_encode($cart_items);
     $stmt->bind_param("ssssssds", $order_id, $customer_name, $customer_email, $customer_phone, $customer_address, $items_json, $total_amount, $payment_method);
@@ -102,7 +109,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'success' => true,
             'message' => 'Order placed successfully',
             'order_id' => $order_id,
-            'total_amount' => $total_amount
+            'total_amount' => $total_amount,
+            'delivery_fee' => $delivery_fee,
+            'fulfillment' => $fulfillment
         ]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Error placing order: ' . $stmt->error]);

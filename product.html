@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="./navbar.js"></script>
     <script src="./chatbot-component.js"></script>
+    <script src="./notification-component.js"></script>
     <style>
         * {
             margin: 0;
@@ -21,6 +22,10 @@
             min-height: 100vh;
             color: #333;
         }
+
+        .admin-add-btn{position:fixed;right:20px;bottom:90px;z-index:1200;display:none}
+        .admin-add-btn button{width:56px;height:56px;border:none;border-radius:50%;background:linear-gradient(135deg,#11b671,#0ea55d);color:#fff;font-size:24px;box-shadow:0 10px 25px rgba(17,182,113,.35);cursor:pointer;transition:transform .2s ease}
+        .admin-add-btn button:hover{transform:scale(1.07)}
 
         .hero-section {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -351,6 +356,9 @@
     </style>
 </head>
 <body>
+    <div class="admin-add-btn" id="adminAddBtn">
+        <button title="Add Product" onclick="window.location.href='add_products.php'">+</button>
+    </div>
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-content">
@@ -409,13 +417,16 @@
             loadProducts();
             setupEventListeners();
             
-            // Initialize navbar and chatbot
-            if (typeof ModernNavbar !== 'undefined') {
-                new ModernNavbar();
-            }
-            if (typeof MediMergeChatbot !== 'undefined') {
-                new MediMergeChatbot();
-            }
+            if (typeof ModernNavbar !== 'undefined') new ModernNavbar();
+            if (typeof MediMergeChatbot !== 'undefined') new MediMergeChatbot();
+            
+            // Admin-only add button
+            fetch('./session.php').then(r=>r.json()).then(s=>{
+                if (s && s.username === 'TheAdmin') {
+                    const btn=document.getElementById('adminAddBtn');
+                    if(btn){ btn.style.display='block'; }
+                }
+            }).catch(()=>{});
         });
 
         function setupEventListeners() {

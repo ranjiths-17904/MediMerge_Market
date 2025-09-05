@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="./navbar.js"></script>
     <script src="./chatbot-component.js"></script>
+    <script src="./notification-component.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         * {
             margin: 0;
@@ -496,6 +498,21 @@
                         </div>
                     </div>
 
+                    <!-- Fulfillment Method -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-truck"></i> Delivery or Pickup</h3>
+                        <div class="payment-methods">
+                            <div class="payment-method">
+                                <input type="radio" id="delivery" name="fulfillment" value="delivery" checked>
+                                <label for="delivery">Home Delivery (₹15 per item)</label>
+                            </div>
+                            <div class="payment-method">
+                                <input type="radio" id="pickup" name="fulfillment" value="pickup">
+                                <label for="pickup">Store Pickup (Free)</label>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Payment Method -->
                     <div class="form-section">
                         <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
@@ -542,8 +559,8 @@
                         <span class="summary-value" id="subtotal">₹0.00</span>
                     </div>
                     <div class="summary-row">
-                        <span class="summary-label">Shipping:</span>
-                        <span class="summary-value">Free</span>
+                        <span class="summary-label">Delivery Fee:</span>
+                        <span class="summary-value" id="deliveryFee">₹0.00</span>
                     </div>
                     <div class="summary-row total">
                         <span class="summary-label">Total:</span>
@@ -563,11 +580,13 @@
     <script>
         let cartItems = [];
         let cartTotal = 0;
+        const DELIVERY_FEE_PER_ITEM = 15;
 
         // Load cart on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadCart();
             setupPaymentMethodSelection();
+            setupFulfillmentSelection();
             initializeNavbar();
             initializeChatbot();
         });
@@ -626,7 +645,16 @@
             // Update summary
             document.getElementById('itemCount').textContent = cartItems.length;
             document.getElementById('subtotal').textContent = `₹${cartTotal.toFixed(2)}`;
-            document.getElementById('total').textContent = `₹${cartTotal.toFixed(2)}`;
+            const fulfillment = (document.querySelector('input[name="fulfillment"]:checked')||{}).value || 'delivery';
+            const deliveryFee = fulfillment === 'delivery' ? DELIVERY_FEE_PER_ITEM * cartItems.reduce((s,i)=>s + Number(i.quantity||1),0) : 0;
+            document.getElementById('deliveryFee').textContent = `₹${deliveryFee.toFixed(2)}`;
+            document.getElementById('total').textContent = `₹${(cartTotal + deliveryFee).toFixed(2)}`;
+        }
+
+        function setupFulfillmentSelection(){
+            document.querySelectorAll('input[name="fulfillment"]').forEach(r=>{
+                r.addEventListener('change', displayOrderSummary);
+            });
         }
 
         function displayCheckoutForm() {
@@ -688,28 +716,18 @@
                         country: formData.get('country')
                     },
                     paymentMethod: formData.get('paymentMethod'),
+                    fulfillment: formData.get('fulfillment') || 'delivery',
                     notes: formData.get('notes'),
                     items: cartItems,
-                    total: cartTotal
+                    total: parseFloat(document.getElementById('total').textContent.replace('₹',''))
                 };
 
-                const response = await fetch('./api/checkout_api.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(orderData)
-                });
-
-                const data = await response.json();
-                
-                if (data.success) {
-                    showToast('Order placed successfully!', 'success');
-                    setTimeout(() => {
-                        window.location.href = './confirmation.html?order_id=' + data.order_id;
-                    }, 2000);
+                const wantsOnline = orderData.paymentMethod !== 'cod';
+                if (wantsOnline) {
+                    // Simulate online payment via internal gateway
+                    await submitOrder(orderData);
                 } else {
-                    showToast(data.message || 'Failed to place order', 'error');
+                    await submitOrder(orderData);
                 }
             } catch (error) {
                 showToast('Network error. Please try again.', 'error');
@@ -717,6 +735,37 @@
                 // Re-enable button
                 placeOrderBtn.disabled = false;
                 placeOrderBtn.innerHTML = originalText;
+            }
+        }
+
+        async function submitOrder(orderData) {
+            const response = await fetch('./api/checkout_api.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            });
+            const data = await response.json();
+            if (data.success) {
+                try {
+                    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                    orders.push({
+                        orderId: data.order_id || ('MM' + Date.now()),
+                        orderDate: new Date().toISOString(),
+                        customer: orderData.customer,
+                        items: orderData.items,
+                        total: orderData.total,
+                        paymentMethod: orderData.paymentMethod
+                    });
+                    localStorage.setItem('orders', JSON.stringify(orders));
+                } catch(e){}
+                // WhatsApp receipt sending disabled per request
+                try {
+                    // intentionally no WhatsApp or external messaging trigger here
+                } catch(e){}
+                showToast('Order placed successfully!', 'success');
+                setTimeout(()=>{ window.location.href = './confirmation.html?order_id=' + data.order_id; }, 1000);
+            } else {
+                showToast(data.message || 'Failed to place order', 'error');
             }
         }
 

@@ -8,7 +8,7 @@ header('Access-Control-Allow-Headers: Content-Type');
 // Check if user is admin
 if (!isset($_SESSION['username']) || $_SESSION['username'] !== 'TheAdmin') {
     http_response_code(403);
-    echo json_encode(['success' => false, 'message' => 'Access denied. Admin only.']);
+    echo json_encode(['success' => false, 'message' => 'Access denied. dAdmin only.']);
     exit;
 }
 

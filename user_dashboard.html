@@ -6,78 +6,664 @@
     <title>User Dashboard - MediMerge</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="./Style/responsive.css">
     <script src="./navbar.js"></script>
     <script src="./chatbot-component.js"></script>
+    <script src="./notification-component.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; background:#f5f7fa; margin:0; }
-        .container{ max-width:1100px; margin:80px auto 40px; padding:0 16px; }
-        .grid{ display:grid; grid-template-columns: 1fr 2fr; gap:24px; }
-        .card{ background:#fff; border-radius:16px; box-shadow:0 8px 24px rgba(0,0,0,.08); padding:24px; }
-        h2{ margin:0 0 16px; font-size:22px; }
-        .row{ display:flex; gap:12px; margin-bottom:12px; }
-        label{ width:140px; color:#666; font-weight:600; }
-        input{ flex:1; padding:10px 12px; border:1px solid #e1e1e1; border-radius:10px; }
-        .btn{ background:linear-gradient(135deg,#11b671,#0ea55d); color:#fff; border:none; padding:12px 18px; border-radius:10px; font-weight:700; cursor:pointer; }
-        table{ width:100%; border-collapse:collapse; }
-        th,td{ padding:12px; border-bottom:1px solid #eee; text-align:left; }
-        th{ background:#fafafa; }
-        .empty{ color:#777; padding:20px; text-align:center; }
+        .dashboard-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+            padding: 2rem 1rem;
+        }
+
+        .dashboard-header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.2;
+        }
+
+        .dashboard-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            padding: 0 1rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #11b671, #0ea55d);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 28px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            padding: 0 1rem;
+        }
+
+        .content-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #11b671, #0ea55d);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .section-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .section-body {
+            padding: 1.5rem;
+        }
+
+        .order-item, .product-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .order-item:last-child, .product-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-info, .product-info {
+            flex: 1;
+        }
+
+        .order-id, .product-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .order-status, .product-category {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .order-amount, .product-price {
+            font-weight: 600;
+            color: #11b671;
+            font-size: 1.1rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-processing { background: #dbeafe; color: #1e40af; }
+        .status-shipped { background: #d1fae5; color: #065f46; }
+        .status-delivered { background: #dcfce7; color: #166534; }
+        .status-cancelled { background: #fee2e2; color: #991b1b; }
+
+        .order-delivery {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .order-delivery i {
+            color: #11b671;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+
+        .action-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 20px;
+        }
+
+        .action-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-desc {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h4 {
+            color: #999;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: #bbb;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                padding: 1rem 0.5rem;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .main-content {
+                grid-template-columns: 1fr;
+                padding: 0 0.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                padding: 0 0.5rem;
+            }
+            
+            .quick-actions {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                padding: 0 0.5rem;
+            }
+            
+            .stat-card, .content-section, .action-card {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-header {
+                padding: 0.5rem;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 2rem;
+            }
+            
+            .dashboard-header p {
+                font-size: 0.9rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                padding: 0 0.5rem;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+                padding: 0 0.5rem;
+            }
+            
+            .main-content {
+                padding: 0 0.5rem;
+            }
+            
+            .stat-card, .content-section, .action-card {
+                padding: 0.75rem;
+                margin: 0;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .loading i {
+            font-size: 2rem;
+            color: #11b671;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="grid">
-            <div class="card">
-                <h2>Profile</h2>
-                <div class="row"><label>Username</label><input id="uName" type="text"></div>
-                <div class="row"><label>Email</label><input id="uEmail" type="email"></div>
-                <div class="row"><label>New Password</label><input id="uPwd" type="password" placeholder="Leave blank to keep unchanged"></div>
-                <button class="btn" onclick="saveProfile()">Save Profile</button>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="container">
+                <h1>Welcome Back!</h1>
+                <p>Manage your health and wellness journey with MediMerge. Track orders, explore products, and stay healthy.</p>
             </div>
-            <div class="card">
-                <h2>Recent Orders</h2>
-                <div id="ordersWrap"></div>
+        </div>
+
+        <div class="container">
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="action-card" onclick="window.location.href='product.html'">
+                    <div class="action-icon">
+                        <i class="fas fa-pills"></i>
+                    </div>
+                    <div class="action-title">Browse Products</div>
+                    <div class="action-desc">Explore our health products</div>
+                </div>
+                <div class="action-card" onclick="window.location.href='cart.html'">
+                    <div class="action-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="action-title">View Cart</div>
+                    <div class="action-desc">Check your shopping cart</div>
+                </div>
+                <div class="action-card" onclick="window.location.href='medico.html'">
+                    <div class="action-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="action-title">Go Home</div>
+                    <div class="action-desc">Return to homepage</div>
+                </div>
+                <div class="action-card" onclick="window.location.href='#'">
+                    <div class="action-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div class="action-title">Get Support</div>
+                    <div class="action-desc">Contact customer service</div>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="stat-number" id="total-orders">0</div>
+                    <div class="stat-label">Total Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-pills"></i>
+                    </div>
+                    <div class="stat-number" id="total-products">0</div>
+                    <div class="stat-label">Products Viewed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="stat-number" id="health-score">85</div>
+                    <div class="stat-label">Health Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-number" id="loyalty-points">250</div>
+                    <div class="stat-label">Loyalty Points</div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Recent Orders -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-shopping-bag"></i> Recent Orders</h3>
+                    </div>
+                    <div class="section-body">
+                        <div id="orders-container">
+                            <div class="loading">
+                                <i class="fas fa-spinner"></i>
+                                <p>Loading orders...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Favorite Products -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-heart"></i> Favorite Products</h3>
+                    </div>
+                    <div class="section-body">
+                        <div id="favorites-container">
+                            <div class="empty-state">
+                                <i class="fas fa-heart"></i>
+                                <h4>No favorites yet</h4>
+                                <p>Start adding products to your favorites</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Tips Section -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-lightbulb"></i> Health Tips</h3>
+                </div>
+                <div class="section-body">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="text-primary mb-2">Stay Hydrated</h4>
+                                <p>Drink at least 8 glasses of water daily to maintain good health and energy levels.</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="text-primary mb-2">Regular Exercise</h4>
+                                <p>30 minutes of moderate exercise daily can significantly improve your overall health.</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="text-primary mb-2">Balanced Diet</h4>
+                                <p>Include fruits, vegetables, and whole grains in your daily meals for optimal nutrition.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Initialize navbar and chatbot
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof ModernNavbar !== 'undefined') {
-                new ModernNavbar();
+        // Dashboard functionality
+        class UserDashboard {
+            constructor() {
+                this.userId = null;
+                this.init();
             }
-            if (typeof MediMergeChatbot !== 'undefined') {
-                new MediMergeChatbot();
+
+            async getUserId() {
+                // First try to get from session API
+                try {
+                    const response = await fetch('./api/session_api.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            action: 'get_current_user'
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    if (data.success && data.user) {
+                        return data.user.id;
+                    }
+                } catch (error) {
+                    console.log('Session API failed, trying localStorage');
+                }
+                
+                // Fallback to localStorage or sessionStorage
+                return localStorage.getItem('medimerge_user_id') || sessionStorage.getItem('medimerge_user_id') || '1';
             }
-        });
 
-        // require login
-        fetch('session.php').then(r=>r.json()).then(s=>{
-            if(!s.username){ window.location.href='login.php'; return; }
-            document.getElementById('uName').value = s.username;
-        });
+            async init() {
+                this.userId = await this.getUserId();
+                await this.loadUserOrders();
+                this.loadUserStats();
+                this.setupEventListeners();
+            }
 
-        function renderOrders(){
-            const wrap=document.getElementById('ordersWrap');
-            const orders = JSON.parse(localStorage.getItem('orders')) || [];
-            if(orders.length===0){ wrap.innerHTML = '<div class="empty">No orders yet</div>'; return; }
-            let html='<table><thead><tr><th>Order ID</th><th>Date</th><th>Items</th><th>Total</th></tr></thead><tbody>';
-            orders.slice().reverse().forEach(o=>{
-                const items=o.items.map(i=>i.name+` x${i.quantity}`).join(', ');
-                html+=`<tr><td>${o.orderId}</td><td>${new Date(o.orderDate).toLocaleString()}</td><td>${items}</td><td>₹${(o.items.reduce((s,i)=>s+i.price*i.quantity,0)*1.18).toFixed(2)}</td></tr>`;
-            });
-            html+='</tbody></table>';
-            wrap.innerHTML=html;
+            async loadUserOrders() {
+                try {
+                    const response = await fetch('./api/user_orders.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            action: 'get_user_orders',
+                            user_id: this.userId
+                        })
+                    });
+
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.displayOrders(data.orders);
+                        this.updateOrderCount(data.orders.length);
+                    } else {
+                        this.showEmptyOrders();
+                    }
+                } catch (error) {
+                    console.error('Error loading orders:', error);
+                    this.showEmptyOrders();
+                }
+            }
+
+            displayOrders(orders) {
+                const container = document.getElementById('orders-container');
+                
+                if (orders.length === 0) {
+                    this.showEmptyOrders();
+                    return;
+                }
+
+                const ordersHTML = orders.map(order => `
+                    <div class="order-item">
+                        <div class="order-info">
+                            <div class="order-id">Order #${order.order_id}</div>
+                            <div class="order-status">
+                                <span class="status-badge status-${order.order_status}">
+                                    ${order.order_status.charAt(0).toUpperCase() + order.order_status.slice(1)}
+                                </span>
+                            </div>
+                            <div class="order-delivery">
+                                <i class="fas fa-truck"></i>
+                                <span>Est. Delivery: ${formatDeliveryDate(order.estimated_delivery)}</span>
+                            </div>
+                        </div>
+                        <div class="order-amount">₹${parseFloat(order.total_amount).toFixed(2)}</div>
+                    </div>
+                `).join('');
+
+                container.innerHTML = ordersHTML;
+            }
+
+            showEmptyOrders() {
+                const container = document.getElementById('orders-container');
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-shopping-bag"></i>
+                        <h4>No orders yet</h4>
+                        <p>Start shopping to see your orders here</p>
+                    </div>
+                `;
+            }
+
+            updateOrderCount(count) {
+                const totalOrdersElement = document.getElementById('total-orders');
+                if (totalOrdersElement) {
+                    totalOrdersElement.textContent = count;
+                }
+            }
+
+            loadUserStats() {
+                // Load user statistics from localStorage or calculate from orders
+                const viewedProducts = JSON.parse(localStorage.getItem('viewed_products') || '[]');
+                const totalProductsElement = document.getElementById('total-products');
+                if (totalProductsElement) {
+                    totalProductsElement.textContent = viewedProducts.length;
+                }
+
+                // Calculate health score based on user activity
+                this.calculateHealthScore();
+            }
+
+            calculateHealthScore() {
+                // Simple health score calculation
+                const orders = JSON.parse(localStorage.getItem('user_orders') || '[]');
+                const healthScore = Math.min(100, 50 + (orders.length * 5));
+                
+                const healthScoreElement = document.getElementById('health-score');
+                if (healthScoreElement) {
+                    healthScoreElement.textContent = healthScore;
+                }
+            }
+
+            setupEventListeners() {
+                // Add any additional event listeners here
+                this.setupChatbot();
+            }
+
+            setupChatbot() {
+                // Set user ID for chatbot if available
+                if (this.userId && window.medimergeChatbot) {
+                    window.medimergeChatbot.setUserId(this.userId);
+                }
+            }
         }
-        renderOrders();
 
-        function saveProfile(){
-            const name=document.getElementById('uName').value.trim();
-            const email=document.getElementById('uEmail').value.trim();
-            if(!name){ if(window.navbar&&window.navbar.showToast) navbar.showToast('Username cannot be empty'); return; }
-            if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ if(window.navbar&&window.navbar.showToast) navbar.showToast('Enter a valid email'); return; }
-            if(window.navbar&&window.navbar.showToast) navbar.showToast('Profile updated');
+        // Helper function to format delivery date
+        function formatDeliveryDate(deliveryDate) {
+            if (deliveryDate === 'Delivered' || deliveryDate === 'Cancelled') {
+                return deliveryDate;
+            }
+            
+            const date = new Date(deliveryDate);
+            const now = new Date();
+            const diffTime = date - now;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays < 0) {
+                return 'Overdue';
+            } else if (diffDays === 0) {
+                return 'Today';
+            } else if (diffDays === 1) {
+                return 'Tomorrow';
+            } else {
+                return `In ${diffDays} days`;
+            }
+        }
+
+        // Initialize dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new UserDashboard();
+        });
+
+        // Utility functions
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR'
+            }).format(amount);
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('en-IN', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
         }
     </script>
 </body>

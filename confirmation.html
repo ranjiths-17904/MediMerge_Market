@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="./navbar.js"></script>
     <script src="./chatbot-component.js"></script>
+    <script src="./notification-component.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -468,8 +470,8 @@
                     <span class="summary-value" id="subtotal">₹0.00</span>
                 </div>
                 <div class="summary-row">
-                    <span class="summary-label">Shipping:</span>
-                    <span class="summary-value">Free</span>
+                    <span class="summary-label">Delivery Fee:</span>
+                    <span class="summary-value" id="deliveryFee">₹0.00</span>
                 </div>
                 <div class="summary-row">
                     <span class="summary-label">Total:</span>
@@ -478,9 +480,9 @@
             </div>
 
             <!-- Delivery Information -->
-            <div class="delivery-info">
-                <h3><i class="fas fa-truck"></i> Delivery Information</h3>
-                <p>Your order will be delivered within 2-3 business days. You'll receive tracking information via email once your order ships.</p>
+            <div class="delivery-info" id="fulfillmentInfo">
+                <h3><i class="fas fa-truck"></i> Fulfillment Information</h3>
+                <p id="etaText">Preparing estimated time...</p>
             </div>
 
             <!-- Action Buttons -->
@@ -491,6 +493,7 @@
                 <a href="dashboard.php" class="btn btn-secondary">
                     <i class="fas fa-user"></i> View Orders
                 </a>
+                <button id="downloadPdfBtn" class="btn btn-secondary"><i class="fas fa-file-pdf"></i> Download Receipt (PDF)</button>
             </div>
         </div>
     </div>
@@ -516,15 +519,13 @@
                 }
 
                 // Load order details from the API
-                const response = await fetch(`./admin/orders_api.php?order_id=${orderId}`);
-                const data = await response.json();
-                
-                if (data.success && data.order) {
-                    orderData = data.order;
-                    displayOrderConfirmation();
-                } else {
-                    throw new Error(data.message || 'Failed to load order details');
+                // Fallback to localStorage saved in checkout
+                const lsOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+                if (Array.isArray(lsOrders)) {
+                    orderData = lsOrders.find(o => o.orderId === orderId);
                 }
+                if (!orderData) throw new Error('Order not found.');
+                displayOrderConfirmation();
             } catch (error) {
                 showError('Failed to load order details: ' + error.message);
             }
@@ -540,7 +541,7 @@
             confirmationContent.style.display = 'block';
 
             // Display order ID
-            document.getElementById('orderId').textContent = `Order #${orderData.id}`;
+            document.getElementById('orderId').textContent = `Order #${orderData.orderId || orderData.id}`;
 
             // Display customer information
             const customerInfo = document.getElementById('customerInfo');
@@ -565,7 +566,7 @@
 
             // Display order items
             const orderItems = document.getElementById('orderItems');
-            orderItems.innerHTML = orderData.items.map(item => `
+            orderItems.innerHTML = (orderData.items||[]).map(item => `
                 <div class="order-item">
                     <div class="item-info">
                         <div class="item-name">${item.name}</div>
@@ -576,9 +577,20 @@
             `).join('');
 
             // Update summary
-            document.getElementById('itemCount').textContent = orderData.items.length;
-            document.getElementById('subtotal').textContent = `₹${orderData.total.toFixed(2)}`;
-            document.getElementById('total').textContent = `₹${orderData.total.toFixed(2)}`;
+            const subtotal = (orderData.items||[]).reduce((s,i)=>s + (i.price*i.quantity),0);
+            document.getElementById('itemCount').textContent = (orderData.items||[]).length;
+            document.getElementById('subtotal').textContent = `₹${subtotal.toFixed(2)}`;
+            const deliveryFee = orderData.fulfillment === 'delivery' ? (15 * (orderData.items||[]).reduce((s,i)=>s + Number(i.quantity),0)) : 0;
+            document.getElementById('deliveryFee').textContent = `₹${deliveryFee.toFixed(2)}`;
+            const total = subtotal + deliveryFee;
+            document.getElementById('total').textContent = `₹${total.toFixed(2)}`;
+
+            // Fulfillment info + ETA
+            const eta = orderData.fulfillment === 'delivery' ? 'Estimated delivery in 2-3 days.' : 'Pickup ready in ~2 hours at our store.';
+            document.getElementById('etaText').textContent = (orderData.fulfillment === 'delivery' ? 'Delivery selected. ' : 'Pickup selected. ') + eta;
+
+            // Bind PDF download
+            document.getElementById('downloadPdfBtn').onclick = downloadPDF;
         }
 
         function showError(message) {
@@ -601,6 +613,28 @@
             if (typeof MediMergeChatbot !== 'undefined') {
                 new MediMergeChatbot();
             }
+        }
+
+        async function downloadPDF(){
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const items = orderData.items || [];
+            let y = 10;
+            doc.setFontSize(16);
+            doc.text('MediMerge - Order Receipt', 10, y); y+=8;
+            doc.setFontSize(11);
+            doc.text('Order ID: ' + (orderData.orderId || orderData.id), 10, y); y+=6;
+            doc.text('Customer: ' + (orderData.customer?.firstName ? (orderData.customer.firstName + ' ' + orderData.customer.lastName) : (orderData.customer_name||'')), 10, y); y+=6;
+            doc.text('Fulfillment: ' + (orderData.fulfillment === 'pickup' ? 'Pickup' : 'Delivery'), 10, y); y+=8;
+            doc.text('Items:', 10, y); y+=6;
+            items.forEach((it)=>{ doc.text(`- ${it.name} x${it.quantity}  @ ₹${it.price}  = ₹${(it.price*it.quantity).toFixed(2)}`, 12, y); y+=6; });
+            const subtotal = items.reduce((s,i)=>s + i.price*i.quantity,0);
+            const fee = (orderData.fulfillment==='delivery') ? 15*items.reduce((s,i)=>s+Number(i.quantity),0) : 0;
+            y+=4; doc.text('Subtotal: ₹'+ subtotal.toFixed(2), 10, y); y+=6;
+            doc.text('Delivery Fee: ₹'+ fee.toFixed(2), 10, y); y+=6;
+            doc.setFontSize(13);
+            doc.text('Total: ₹'+ (subtotal+fee).toFixed(2), 10, y);
+            doc.save('MediMerge_Receipt_'+(orderData.orderId||'')+'.pdf');
         }
     </script>
 </body>

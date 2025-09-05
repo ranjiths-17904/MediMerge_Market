@@ -1,4 +1,3 @@
-// Modern Responsive Navbar Component
 class ModernNavbar {
     constructor() {
         this.init();
@@ -13,7 +12,7 @@ class ModernNavbar {
         this.createNavbar();
         this.handleSession();
         this.setupMobileMenu();
-        this.setupSearch();
+        // Search removed per requirements
         this.setupScrollEffects();
         this.updateCartCount();
     }
@@ -32,21 +31,13 @@ class ModernNavbar {
 
                     <!-- Desktop Navigation -->
                     <nav class="desktop-nav">
-                        <a href="medico.html" class="nav-link">Home</a>
-                        <a href="product.html" class="nav-link">Products</a>
-                        <a href="medico.html#features" class="nav-link">About</a>
-                        <a href="medico.html#contact" class="nav-link">Contact</a>
+                        <a href="medico.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                        <a href="product.html" class="nav-link"><i class="fas fa-pills"></i> Products</a>
+                        <a href="medico.html#features" class="nav-link"><i class="fas fa-info-circle"></i> About</a>
+                        <a href="medico.html#contact" class="nav-link"><i class="fas fa-envelope"></i> Contact</a>
                     </nav>
 
-                    <!-- Search Bar -->
-                    <div class="search-section">
-                        <div class="search-container">
-                            <input type="text" placeholder="Search products..." class="search-input">
-                            <button class="search-btn">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
+                    <!-- Search removed -->
 
                     <!-- User Actions -->
                     <div class="user-actions">
@@ -54,11 +45,24 @@ class ModernNavbar {
                             <i class="fas fa-shopping-cart"></i>
                             <span class="cart-count" id="cart-count">0</span>
                         </a>
-                        <div class="auth-section">
-                            <a href="user_dashboard.html" id="dashboard-link" class="auth-link" style="display:none">Dashboard</a>
+                        <div class="user-dropdown">
                             <a href="login.php" id="sign-in-link" class="auth-link">Sign In</a>
-                            <span id="username-display" class="username-display"></span>
-                            <a href="logout.php" id="logout-link" class="auth-link logout-link" style="display:none">Logout</a>
+                            <div id="user-menu" class="user-menu" style="display:none">
+                                <button class="user-icon-btn" id="user-icon-btn">
+                                    <i class="fas fa-user-circle"></i>
+                                </button>
+                                <div class="user-dropdown-content" id="user-dropdown-content">
+                                    <div class="user-info">
+                                        <span id="username-display" class="username-display"></span>
+                                    </div>
+                                    <a href="user_dashboard.html" class="dropdown-link">
+                                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                                    </a>
+                                    <a href="logout.php" class="dropdown-link logout-link">
+                                        <i class="fas fa-sign-out-alt"></i> Logout
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -72,14 +76,15 @@ class ModernNavbar {
 
                 <!-- Mobile Navigation -->
                 <nav class="mobile-nav" id="mobile-nav">
-                    <a href="medico.html" class="mobile-nav-link">Home</a>
-                    <a href="product.html" class="mobile-nav-link">Products</a>
-                    <a href="medico.html#features" class="mobile-nav-link">About</a>
-                    <a href="medico.html#contact" class="mobile-nav-link">Contact</a>
-                    <a href="cart.html" class="mobile-nav-link">Cart</a>
-                    <a href="user_dashboard.html" id="mobile-dashboard-link" class="mobile-nav-link" style="display:none">Dashboard</a>
-                    <a href="login.php" id="mobile-sign-in" class="mobile-nav-link">Sign In</a>
-                    <a href="logout.php" id="mobile-logout" class="mobile-nav-link" style="display:none">Logout</a>
+                    <a href="medico.html" class="mobile-nav-link"><i class="fas fa-home"></i> Home</a>
+                    <a href="product.html" class="mobile-nav-link"><i class="fas fa-pills"></i> Products</a>
+                    <a href="medico.html#features" class="mobile-nav-link"><i class="fas fa-info-circle"></i> About</a>
+                    <a href="contact.html" class="mobile-nav-link"><i class="fas fa-envelope"></i> Contact</a>
+                    <a href="cart.html" class="mobile-nav-link"><i class="fas fa-shopping-cart"></i> Cart</a>
+                    <a href="user_dashboard.html" id="mobile-dashboard-link" class="mobile-nav-link" style="display:none"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                    <a href="admin/admin_dashboard.php" id="mobile-admin-link" class="mobile-nav-link" style="display:none"><i class="fas fa-cog"></i> Admin</a>
+                    <a href="login.php" id="mobile-sign-in" class="mobile-nav-link"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+                    <a href="logout.php" id="mobile-logout" class="mobile-nav-link" style="display:none"><i class="fas fa-sign-out-alt"></i> Logout</a>
                 </nav>
             </header>
         `;
@@ -98,13 +103,14 @@ class ModernNavbar {
             <style>
                 .modern-header {
                     background: rgba(255, 255, 255, 0.98);
-                    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
                     position: sticky;
                     top: 0;
                     z-index: 1000;
                     backdrop-filter: blur(20px);
                     border-bottom: 1px solid rgba(17, 182, 113, 0.1);
                     transition: all 0.3s ease;
+                    width: 100%;
                 }
 
                 .modern-header.scrolled {
@@ -114,20 +120,23 @@ class ModernNavbar {
 
                 .nav-container {
                     max-width: 1400px;
+                    width: 100%;
                     margin: 0 auto;
-                    padding: 0 30px;
+                    padding: 0 clamp(15px, 3vw, 30px);
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    height: 85px;
-                    gap: 40px;
+                    height: clamp(65px, 10vw, 85px);
+                    gap: clamp(10px, 3vw, 25px);
+                    position: relative;
+                    box-sizing: border-box;
                 }
 
                 .logo-section {
                     display: flex;
                     align-items: center;
                     flex-shrink: 0;
-                    margin-right: 20px;
+                    min-width: fit-content;
                 }
 
                 .logo-link {
@@ -136,27 +145,28 @@ class ModernNavbar {
                     text-decoration: none;
                     color: inherit;
                     transition: all 0.3s ease;
-                    padding: 8px 12px;
-                    border-radius: 12px;
+                    padding: 4px 8px;
+                    border-radius: 8px;
                 }
 
                 .logo-link:hover {
-                    transform: scale(1.05);
+                    transform: scale(1.02);
                     background: rgba(17, 182, 113, 0.05);
                 }
 
                 .logo-img {
-                    width: 48px;
-                    height: 48px;
-                    margin-right: 15px;
+                    width: clamp(32px, 6vw, 48px);
+                    height: clamp(32px, 6vw, 48px);
+                    margin-right: clamp(6px, 2vw, 15px);
                     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
                 }
 
                 .logo-text {
-                    font-size: clamp(22px, 4vw, 28px);
+                    font-size: clamp(16px, 4vw, 28px);
                     font-weight: 800;
                     color: #1a1a1a;
                     letter-spacing: -0.5px;
+                    white-space: nowrap;
                 }
 
                 .logo-accent {
@@ -166,33 +176,37 @@ class ModernNavbar {
 
                 .desktop-nav {
                     display: flex;
-                    gap: clamp(25px, 3vw, 40px);
-                    margin: 0 20px;
+                    flex-wrap: wrap;
+                    gap: clamp(8px, 2vw, 20px);
+                    margin: 0 clamp(5px, 2vw, 15px);
                 }
 
                 .nav-link {
                     color: #333;
                     text-decoration: none;
                     font-weight: 600;
-                    font-size: clamp(15px, 2vw, 17px);
+                    font-size: clamp(13px, 1.5vw, 16px);
                     transition: all 0.3s ease;
                     position: relative;
-                    padding: 12px 20px;
-                    border-radius: 25px;
+                    padding: clamp(6px, 1.5vw, 12px) clamp(8px, 2vw, 18px);
+                    border-radius: 20px;
                     white-space: nowrap;
                     letter-spacing: 0.2px;
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
                 }
 
                 .nav-link:hover {
                     color: #11b671;
                     background: rgba(17, 182, 113, 0.1);
-                    transform: translateY(-2px);
+                    transform: translateY(-1px);
                 }
 
                 .nav-link::after {
                     content: '';
                     position: absolute;
-                    bottom: 8px;
+                    bottom: 4px;
                     left: 50%;
                     width: 0;
                     height: 2px;
@@ -205,95 +219,46 @@ class ModernNavbar {
                     width: 60%;
                 }
 
-                .search-section {
-                    flex: 1;
-                    max-width: 450px;
-                    margin: 0 30px;
-                }
-
-                .search-container {
-                    position: relative;
-                    display: flex;
-                    align-items: center;
-                }
-
-                .search-input {
-                    width: 100%;
-                    padding: 14px 50px 14px 20px;
-                    border: 2px solid #e8e8e8;
-                    border-radius: 30px;
-                    background: #f8f9fa;
-                    font-size: 15px;
-                    outline: none;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-                }
-
-                .search-input:focus {
-                    background: #ffffff;
-                    border-color: #11b671;
-                    box-shadow: 0 0 0 4px rgba(17, 182, 113, 0.1), 0 4px 16px rgba(0,0,0,0.1);
-                }
-
-                .search-btn {
-                    position: absolute;
-                    right: 6px;
-                    background: linear-gradient(135deg, #11b671, #0ea55d);
-                    border: none;
-                    border-radius: 50%;
-                    width: 38px;
-                    height: 38px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: white;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 2px 8px rgba(17, 182, 113, 0.3);
-                }
-
-                .search-btn:hover {
-                    background: linear-gradient(135deg, #0ea55d, #0d9488);
-                    transform: scale(1.1);
-                    box-shadow: 0 4px 16px rgba(17, 182, 113, 0.4);
-                }
+                /* Search removed */
 
                 .user-actions {
                     display: flex;
                     align-items: center;
-                    gap: clamp(15px, 2vw, 25px);
+                    gap: clamp(4px, 1vw, 8px);
                     flex-shrink: 0;
+                    min-width: fit-content;
                 }
 
                 .cart-link {
                     position: relative;
                     color: #333;
-                    font-size: clamp(18px, 3vw, 22px);
+                    font-size: clamp(16px, 3vw, 20px);
                     text-decoration: none;
                     transition: all 0.3s ease;
-                    padding: 10px;
+                    padding: clamp(6px, 1.5vw, 10px);
                     border-radius: 50%;
+                    flex-shrink: 0;
                 }
 
                 .cart-link:hover {
                     color: #11b671;
                     background: rgba(17, 182, 113, 0.1);
-                    transform: scale(1.1);
+                    transform: scale(1.05);
                 }
 
                 .cart-count {
                     position: absolute;
-                    top: 2px;
-                    right: 2px;
+                    top: 0;
+                    right: 0;
                     background: linear-gradient(135deg, #ff4757, #ff3742);
                     color: white;
                     border-radius: 50%;
-                    width: 22px;
-                    height: 22px;
+                    width: clamp(16px, 3vw, 20px);
+                    height: clamp(16px, 3vw, 20px);
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-size: 12px;
+                    font-size: clamp(10px, 1.5vw, 12px);
                     font-weight: bold;
                     box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
                     animation: pulse 2s infinite;
@@ -301,56 +266,136 @@ class ModernNavbar {
 
                 @keyframes pulse {
                     0% { transform: scale(1); }
-                    50% { transform: scale(1.1); }
+                    50% { transform: scale(1.05); }
                     100% { transform: scale(1); }
                 }
 
-                .auth-section {
+                .user-dropdown {
+                    position: relative;
                     display: flex;
                     align-items: center;
-                    gap: clamp(12px, 2vw, 18px);
                 }
 
                 .auth-link {
                     color: #333;
                     text-decoration: none;
                     font-weight: 600;
-                    padding: clamp(8px, 2vw, 10px) clamp(12px, 3vw, 20px);
-                    border-radius: 25px;
+                    padding: clamp(4px, 1vw, 8px) clamp(6px, 1.5vw, 12px);
+                    border-radius: 18px;
                     transition: all 0.3s ease;
-                    border: 2px solid transparent;
-                    font-size: clamp(12px, 2vw, 14px);
+                    border: 1px solid transparent;
+                    font-size: clamp(11px, 1.3vw, 14px);
                     white-space: nowrap;
+                    text-align: center;
+                    min-width: fit-content;
                 }
 
                 .auth-link:hover {
                     background: rgba(17, 182, 113, 0.1);
                     border-color: rgba(17, 182, 113, 0.3);
-                    transform: translateY(-2px);
+                    transform: translateY(-1px);
+                }
+
+                .user-icon-btn {
+                    background: none;
+                    border: none;
+                    color: #11b671;
+                    font-size: clamp(18px, 3vw, 24px);
+                    cursor: pointer;
+                    padding: clamp(4px, 1vw, 8px);
+                    border-radius: 50%;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .user-icon-btn:hover {
+                    background: rgba(17, 182, 113, 0.1);
+                    transform: scale(1.05);
+                }
+
+                .user-dropdown-content {
+                    position: absolute;
+                    top: 100%;
+                    right: 0;
+                    background: white;
+                    border-radius: 12px;
+                    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+                    border: 1px solid rgba(17, 182, 113, 0.1);
+                    min-width: 200px;
+                    padding: 8px 0;
+                    opacity: 0;
+                    visibility: hidden;
+                    transform: translateY(-10px);
+                    transition: all 0.3s ease;
+                    z-index: 1000;
+                }
+
+                .user-dropdown-content.show {
+                    opacity: 1;
+                    visibility: visible;
+                    transform: translateY(0);
+                }
+
+                .user-info {
+                    padding: 12px 16px;
+                    border-bottom: 1px solid #f0f0f0;
+                    background: rgba(17, 182, 113, 0.05);
+                }
+
+                .username-display {
+                    font-weight: 600;
+                    color: #11b671;
+                    font-size: 14px;
+                }
+
+                .dropdown-link {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 12px 16px;
+                    color: #333;
+                    text-decoration: none;
+                    font-size: 14px;
+                    transition: all 0.3s ease;
+                }
+
+                .dropdown-link:hover {
+                    background: rgba(17, 182, 113, 0.1);
+                    color: #11b671;
+                }
+
+                .dropdown-link.logout-link:hover {
+                    background: rgba(239, 68, 68, 0.1);
+                    color: #ef4444;
                 }
 
                 .logout-link {
                     background: linear-gradient(135deg, #ff4757, #ff3742);
-                    color: white;
+                    color: white !important;
                     border-color: #ff4757;
                 }
 
                 .logout-link:hover {
                     background: linear-gradient(135deg, #ff3742, #e63946);
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 16px rgba(255, 71, 87, 0.3);
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
                 }
 
                 .username-display {
                     color: #11b671;
                     font-weight: 700;
-                    font-size: clamp(12px, 2vw, 14px);
+                    font-size: clamp(10px, 1.2vw, 13px);
                     display: none;
                     background: rgba(17, 182, 113, 0.1);
-                    padding: clamp(6px, 1.5vw, 8px) clamp(12px, 2vw, 16px);
-                    border-radius: 20px;
+                    padding: clamp(4px, 1vw, 6px) clamp(6px, 1.5vw, 10px);
+                    border-radius: 15px;
                     border: 1px solid rgba(17, 182, 113, 0.2);
                     white-space: nowrap;
+                    max-width: clamp(60px, 15vw, 120px);
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
 
                 /* Toast popups */
@@ -387,9 +432,10 @@ class ModernNavbar {
                     background: none;
                     border: none;
                     cursor: pointer;
-                    padding: 8px;
-                    border-radius: 8px;
+                    padding: clamp(6px, 1.5vw, 8px);
+                    border-radius: 6px;
                     transition: all 0.3s ease;
+                    flex-shrink: 0;
                 }
 
                 .mobile-menu-btn:hover {
@@ -397,10 +443,10 @@ class ModernNavbar {
                 }
 
                 .mobile-menu-btn span {
-                    width: 28px;
-                    height: 3px;
+                    width: clamp(20px, 4vw, 26px);
+                    height: 2.5px;
                     background: #333;
-                    margin: 4px 0;
+                    margin: clamp(2px, 0.5vw, 3px) 0;
                     transition: 0.3s;
                     border-radius: 2px;
                 }
@@ -409,10 +455,18 @@ class ModernNavbar {
                     display: none;
                     background: rgba(255, 255, 255, 0.98);
                     backdrop-filter: blur(20px);
-                    padding: 25px;
+                    padding: 20px;
                     border-top: 1px solid rgba(17, 182, 113, 0.1);
                     box-shadow: 0 8px 32px rgba(0,0,0,0.1);
                     animation: slideDown 0.3s ease;
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    right: 0;
+                    width: 100%;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    z-index: 1000;
                 }
 
                 @keyframes slideDown {
@@ -421,22 +475,24 @@ class ModernNavbar {
                 }
 
                 .mobile-nav-link {
-                    display: block;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
                     color: #333;
                     text-decoration: none;
-                    padding: 20px 0;
+                    padding: 15px 0;
                     border-bottom: 1px solid rgba(0,0,0,0.08);
                     font-weight: 600;
                     transition: all 0.3s ease;
-                    font-size: 17px;
+                    font-size: clamp(15px, 3vw, 17px);
                     letter-spacing: 0.2px;
                 }
 
                 .mobile-nav-link:hover {
                     color: #11b671;
-                    padding-left: 20px;
+                    padding-left: 15px;
                     background: rgba(17, 182, 113, 0.05);
-                    border-radius: 12px;
+                    border-radius: 8px;
                     transform: translateX(5px);
                 }
 
@@ -447,42 +503,77 @@ class ModernNavbar {
                 /* Responsive Design */
                 @media (max-width: 1200px) {
                     .nav-container {
-                        padding: 0 20px;
-                        gap: 30px;
-                    }
-                    
-                    .desktop-nav {
                         gap: 20px;
                     }
                     
-                    .search-section {
-                        margin: 0 20px;
-                        max-width: 350px;
+                    .desktop-nav {
+                        gap: 15px;
+                        margin: 0 10px;
+                    }
+                    
+                    /* Search removed */
+
+                    .auth-section {
+                        gap: 8px;
                     }
                 }
 
                 @media (max-width: 1024px) {
                     .nav-container {
-                        padding: 0 20px;
-                        gap: 25px;
+                        gap: 15px;
                     }
                     
                     .desktop-nav {
-                        gap: 15px;
+                        gap: 12px;
+                        margin: 0 8px;
                     }
                     
-                    .search-section {
-                        margin: 0 15px;
-                        max-width: 300px;
-                    }
+                    /* Search removed */
 
                     .user-actions {
-                        gap: 15px;
+                        gap: 10px;
+                    }
+
+                    .auth-section {
+                        gap: 6px;
+                    }
+
+                    .nav-link {
+                        padding: 8px 12px;
+                        font-size: 14px;
+                    }
+
+                    .auth-link {
+                        padding: 6px 10px;
+                        font-size: 12px;
+                    }
+                }
+
+                @media (max-width: 900px) {
+                    /* Search removed */
+
+                    .desktop-nav {
+                        gap: 8px;
+                    }
+
+                    .nav-link {
+                        padding: 6px 10px;
+                        font-size: 13px;
+                    }
+
+                    .auth-link {
+                        padding: 5px 8px;
+                        font-size: 11px;
+                    }
+
+                    .username-display {
+                        max-width: 80px;
+                        font-size: 10px;
                     }
                 }
 
                 @media (max-width: 768px) {
-                    .desktop-nav, .search-section {
+                    .desktop-nav {
                         display: none;
                     }
 
@@ -491,59 +582,152 @@ class ModernNavbar {
                     }
 
                     .nav-container {
-                        padding: 0 20px;
-                        height: 70px;
-                        gap: 20px;
-                    }
-
-                    .logo-text {
-                        font-size: 20px;
-                    }
-
-                    .logo-img {
-                        width: 40px;
-                        height: 40px;
-                        margin-right: 10px;
-                    }
-
-                    .user-actions {
                         gap: 12px;
-                    }
-
-                    .auth-section {
-                        gap: 10px;
-                    }
-                }
-
-                @media (max-width: 480px) {
-                    .nav-container {
-                        padding: 0 15px;
                         height: 65px;
-                    }
-
-                    .logo-text {
-                        font-size: 18px;
-                    }
-
-                    .logo-img {
-                        width: 35px;
-                        height: 35px;
-                        margin-right: 8px;
                     }
 
                     .user-actions {
                         gap: 8px;
                     }
 
-                    .cart-link {
-                        font-size: 18px;
-                        padding: 8px;
+                    .auth-section {
+                        gap: 6px;
                     }
 
                     .auth-link {
-                        padding: 6px 12px;
+                        padding: 5px 8px;
+                        font-size: 11px;
+                    }
+
+                    .username-display {
+                        max-width: 70px;
+                        font-size: 10px;
+                        padding: 3px 6px;
+                    }
+                }
+
+                @media (max-width: 640px) {
+                    .nav-container {
+                        gap: 10px;
+                        height: 60px;
+                    }
+
+                    .user-actions {
+                        gap: 6px;
+                    }
+
+                    .auth-section {
+                        gap: 4px;
+                    }
+
+                    .auth-link {
+                        padding: 4px 6px;
+                        font-size: 10px;
+                    }
+
+                    .username-display {
+                        max-width: 60px;
+                        font-size: 9px;
+                        padding: 2px 4px;
+                    }
+
+                    .cart-link {
+                        padding: 6px;
+                        font-size: 16px;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .nav-container {
+                        padding: 0 10px;
+                        gap: 8px;
+                        height: 55px;
+                    }
+
+                    .user-actions {
+                        gap: 4px;
+                    }
+
+                    .auth-section {
+                        gap: 3px;
+                    }
+
+                    .auth-link {
+                        padding: 3px 5px;
+                        font-size: 9px;
+                        border-radius: 12px;
+                    }
+
+                    .username-display {
+                        max-width: 50px;
+                        font-size: 8px;
+                        padding: 2px 3px;
+                    }
+
+                    .cart-link {
+                        padding: 4px;
+                        font-size: 14px;
+                    }
+
+                    .logo-text {
+                        font-size: 14px;
+                    }
+
+                    .logo-img {
+                        width: 28px;
+                        height: 28px;
+                        margin-right: 6px;
+                    }
+                }
+
+                @media (max-width: 380px) {
+                    .nav-container {
+                        padding: 0 8px;
+                        gap: 6px;
+                    }
+
+                    .auth-link {
+                        padding: 2px 4px;
+                        font-size: 8px;
+                        min-width: auto;
+                    }
+
+                    .username-display {
+                        max-width: 45px;
+                        font-size: 7px;
+                    }
+
+                    .logo-text {
                         font-size: 12px;
                     }
+
+                    .logo-img {
+                        width: 24px;
+                        height: 24px;
+                        margin-right: 4px;
+                    }
+                }
+
+                /* Utility class for hiding overflow */
+                .modern-header {
+                    overflow-x: hidden;
+                    width: 100%;
+                }
+
+                /* Ensure no horizontal scroll */
+                .nav-container {
+                    min-width: 0;
+                    overflow: hidden;
+                }
+
+                .user-actions {
+                    min-width: 0;
+                    overflow: hidden;
+                }
+
+                .auth-section {
+                    min-width: 0;
+                    overflow: hidden;
                 }
             </style>
         `;
@@ -560,33 +744,51 @@ class ModernNavbar {
                     // User is logged in
                     document.getElementById('sign-in-link').style.display = 'none';
                     document.getElementById('mobile-sign-in').style.display = 'none';
-                    document.getElementById('logout-link').style.display = 'inline-block';
+                    document.getElementById('user-menu').style.display = 'block';
                     document.getElementById('mobile-logout').style.display = 'block';
+                    document.getElementById('mobile-dashboard-link').style.display = 'block';
                     
+                    // Show admin link if user is admin
                     if (data.isAdmin) {
-                        document.getElementById('dashboard-link').style.display = 'inline-block';
-                        document.getElementById('mobile-dashboard-link').style.display = 'block';
-                    } else {
-                        document.getElementById('dashboard-link').style.display = 'inline-block';
-                        document.getElementById('mobile-dashboard-link').style.display = 'block';
+                        document.getElementById('mobile-admin-link').style.display = 'block';
                     }
                     
                     document.getElementById('username-display').textContent = data.username;
-                    document.getElementById('username-display').style.display = 'inline-block';
+                    
+                    // Setup dropdown functionality
+                    this.setupUserDropdown();
                 } else {
                     // User is not logged in
                     document.getElementById('sign-in-link').style.display = 'inline-block';
                     document.getElementById('mobile-sign-in').style.display = 'block';
-                    document.getElementById('logout-link').style.display = 'none';
+                    document.getElementById('user-menu').style.display = 'none';
                     document.getElementById('mobile-logout').style.display = 'none';
-                    document.getElementById('dashboard-link').style.display = 'none';
                     document.getElementById('mobile-dashboard-link').style.display = 'none';
-                    document.getElementById('username-display').style.display = 'none';
+                    document.getElementById('mobile-admin-link').style.display = 'none';
                 }
             })
             .catch(error => {
                 console.log('Session check failed:', error);
             });
+    }
+
+    setupUserDropdown() {
+        const userIconBtn = document.getElementById('user-icon-btn');
+        const dropdownContent = document.getElementById('user-dropdown-content');
+        
+        if (userIconBtn && dropdownContent) {
+            userIconBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdownContent.classList.toggle('show');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userIconBtn.contains(e.target) && !dropdownContent.contains(e.target)) {
+                    dropdownContent.classList.remove('show');
+                }
+            });
+        }
     }
 
     setupMobileMenu() {
